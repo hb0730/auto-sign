@@ -5,14 +5,20 @@ go 实现签到
 代码实现 [geekhub](https://geekhub.com) 的签到
 首先需要一个原始的`session_id`
 ```go
-	geekhub := geekhub.Geekhub{SessionId: ""}
-	geekhub.Do()
+geekhub := geekhub.Geekhub{SessionId: ""}
+geekhub.Do()
 ```
 ## ld246
 代码实现 [ld](https://ld246.com) 的签到(自动签到)
 ```go
-	ld := ld246.LD{Username: "", Password: ""}
-	ld.Do()
+ld := ld246.LD{Username: "", Password: ""}
+ld.Do()
+```
+## V2ex
+代码实现 [V2ex](https://V2ex.com) 的签到()
+```go
+v := v2ex.V2ex{Cookie: ""}
+v.Do()
 ```
 
 # cron 定时任务
