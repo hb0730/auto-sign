@@ -14,3 +14,6 @@ go 实现签到
 	ld := ld246.LD{Username: "", Password: ""}
 	ld.Do()
 ```
+
+# cron 定时任务
+可以使用 [gocron](https://github.com/go-co-op/gocron) 来做定时任务
