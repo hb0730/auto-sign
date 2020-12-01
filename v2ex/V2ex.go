@@ -9,7 +9,7 @@ import (
 )
 
 type V2ex struct {
-	Cookie string
+	Cookie map[string]string
 }
 
 const ONCE_REG = `once=(.*?)'`
@@ -35,7 +35,7 @@ func (v *V2ex) Start(once string) {
 	}
 }
 func (v *V2ex) Dayily() string {
-	if v.Cookie == "" {
+	if len(v.Cookie) <= 0 {
 		fmt.Println("cookie si null")
 		return ""
 	}
@@ -61,9 +61,16 @@ func query(method string, url string, params string, header http.Header) (string
 	return "", false
 }
 
-func setCookie(cookie string) http.Header {
+func setCookie(cookie map[string]string) http.Header {
 	headers := http.Header{}
-	c := http.Cookie{Name: "A2", Value: cookie}
-	headers.Set("Cookie", c.String())
+	headers.Set("Cookie", mapToJson(cookie))
 	return headers
+}
+
+func mapToJson(params map[string]string) string {
+	str := ""
+	for k, v := range params {
+		str += k + "=" + v + "; "
+	}
+	return str
 }
