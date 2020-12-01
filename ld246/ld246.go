@@ -6,11 +6,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"regexp"
 )
 
 const LOGIN_URL = "https://ld246.com/api/v2/login"
 const LOGOUT_URL = "https://ld246.com/api/v2/logout"
 const LD_INDEX = "https://ld246.com/"
+const CHECKIN = "https://ld246.com/activity/checkin"
+const CHECK = "https://ld246.com/activity/daily-checkin"
+const CSRFTOKEN_REG = `csrfToken: '(.*?)'`
 
 type LD struct {
 	Username string
@@ -28,6 +33,7 @@ func (ld *LD) Do() {
 	}
 	r := ld.Login(ld.Username, ld.Password)
 	ld.Index(r.Token)
+	ld.checkin(r.Token)
 	ld.Logout(r.Token)
 }
 
@@ -48,6 +54,35 @@ func (*LD) Login(username string, password string) LoginResult {
 	}
 	fmt.Println("login failed")
 	return r
+}
+func (*LD) checkin(token string) {
+	if token == "" {
+		fmt.Println("token is null")
+		return
+	}
+	header := setCookie(token)
+	body, is := query("GET", CHECKIN, "", header)
+	if is {
+		compile := regexp.MustCompile(CSRFTOKEN_REG)
+		once := compile.FindAllStringSubmatch(body, -1)
+		fmt.Println("check start ....")
+		chek(token, once[0][1])
+		return
+	}
+	fmt.Printf("request index failed %v\n", body)
+}
+func chek(token string, csrfToken string) {
+	if csrfToken == "" {
+		fmt.Println("csrfToken is null")
+		return
+	}
+	headers := setCookie(token)
+	params := url.Values{}
+	params.Set("token", csrfToken)
+	body, is := query("GET", CHECK, params.Encode(), headers)
+	if is {
+		fmt.Printf("check success %v\n", body)
+	}
 }
 func (*LD) Index(token string) {
 	if token == "" {
@@ -92,6 +127,7 @@ func setCookie(token string) http.Header {
 		return headers
 	}
 	headers.Add("Cookie", fmt.Sprintf("symphony=%s", token))
+	headers.Set("User-Agent", "hb0730/1.0.0")
 	return headers
 }
 

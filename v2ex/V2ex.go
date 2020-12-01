@@ -4,6 +4,7 @@ import (
 	"auto-sign/request"
 	"fmt"
 	"net/http"
+	"net/url"
 	"regexp"
 )
 
@@ -13,7 +14,7 @@ type V2ex struct {
 
 const ONCE_REG = `once=(.*?)'`
 const DAYILY_URL = "https://www.v2ex.com/mission/daily"
-const STAR_URL = "https://www.v2ex.com/mission/daily/redeem?once=%s"
+const STAR_URL = "https://www.v2ex.com/mission/daily/redeem"
 
 func (v *V2ex) Do() {
 	once := v.Dayily()
@@ -25,9 +26,10 @@ func (v *V2ex) Start(once string) {
 		fmt.Println("once is null")
 		return
 	}
-	url := fmt.Sprintf(STAR_URL, once)
+	params := url.Values{}
+	params.Set("once", once)
 	headers := setCookie(v.Cookie)
-	body, is := query("GET", url, "", headers)
+	body, is := query("GET", STAR_URL, params.Encode(), headers)
 	if is {
 		fmt.Println(body)
 	}
