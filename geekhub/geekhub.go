@@ -14,28 +14,30 @@ const URL2 = "https://geekhub.com/checkins"
 
 const authenticity_token = `<meta name="csrf-token" content="(.*?)" />`
 
-var sessionId string
-
 type Geekhub struct {
-	SessionId string
+	//SessionId string
+	Cookies request.Cookies
 }
 
 func (geekhub *Geekhub) Do() {
-	if geekhub.SessionId == "" {
+	if len(geekhub.Cookies) <= 0 {
 		fmt.Println("session is  null")
 		return
 	}
-	token := checkins(geekhub.SessionId)
+	token := geekhub.checkins()
 	if token != "" {
-		start(token)
+		geekhub.start(token)
 	}
 }
 
 // checkins
-func checkins(session string) string {
+func (geekhub *Geekhub) checkins() string {
 	fmt.Println("get token ...")
-	headers := setSession(session)
-	body, is := query("GET", URL2, "", headers)
+	r := request.Request{Method: "GET", Url: URL2, Params: ""}
+	req := r.CreateRequest()
+	req.Header = setHeader()
+	request.SetCookie(geekhub.Cookies, req)
+	body, is := geekhub.do(req)
 	if !is {
 		fmt.Println("session timout,reset session")
 		return ""
@@ -52,38 +54,38 @@ func checkins(session string) string {
 }
 
 //start
-func start(token string) {
+func (geekhub *Geekhub) start(token string) {
 	fmt.Println("start sign ....")
 	values := url.Values{}
 	// 转义
 	values.Add("_method", "post")
 	values.Add("authenticity_token", token)
 	params := values.Encode()
-	headers := setSession(sessionId)
-	body, r := query("POST", URL, params, headers)
-	if r {
+	r := request.Request{Method: "POST", Url: URL, Params: params}
+	req := r.CreateRequest()
+	req.Header = setHeader()
+	request.SetCookie(geekhub.Cookies, req)
+	body, is := geekhub.do(req)
+	if is {
 		fmt.Printf("签到成功 %s\n", body)
 		return
 	}
 	fmt.Printf("签到失败 %v\n", body)
 }
-func setSession(session string) http.Header {
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/x-www-form-urlencoded")
-	headers.Add("Cookie", fmt.Sprintf("_session_id=%s", session))
-	return headers
-}
-func query(method string, url string, params string, header http.Header) (string, bool) {
-	r := request.Request{Method: method, Url: url, Params: params, Headers: header}
-	body, cookie, is := r.Request()
+func (geekhub *Geekhub) do(req *http.Request) (string, bool) {
+	body, cookie, is := request.ClientDo(req)
 	if is {
 		for _, v := range cookie {
 			if v.Name == "_session_id" {
-				sessionId = v.Value
+				geekhub.Cookies["_session_id"] = v.Value
 			}
 		}
-		return body, true
-
+		return body, is
 	}
 	return "", false
+}
+func setHeader() http.Header {
+	headers := http.Header{}
+	headers.Set("Content-Type", "application/x-www-form-urlencoded")
+	return headers
 }

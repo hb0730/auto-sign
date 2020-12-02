@@ -5,7 +5,9 @@ go 实现签到
 代码实现 [geekhub](https://geekhub.com) 的签到
 首先需要一个原始的`session_id`
 ```go
-geekhub := geekhub.Geekhub{SessionId: ""}
+cookie := make(map[string]string, 1)
+cookie["_session_id"] = ""
+geekhub := Geekhub{Cookies: cookie}
 geekhub.Do()
 ```
 
@@ -14,14 +16,15 @@ geekhub.Do()
 ## ld246 -未验证
 代码实现 [ld](https://ld246.com) 的签到(自动签到)
 ```go
-ld := ld246.LD{Username: "", Password: ""}
+ld := LD{Username: "", Password: ""}
 ld.Do()
 ```
 ## V2ex -未验证
 代码实现 [V2ex](https://V2ex.com) 的签到()
 ```go
-v := v2ex.V2ex{Cookie: ""}
-v.Do()
+params := make(map[string]string, 2)
+v2 := V2ex{cookies: params}
+v2.Do()
 ```
 
 需要Cookie中的`v2`,`PB3_SESSION`

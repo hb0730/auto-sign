@@ -10,6 +10,17 @@ import (
 	"regexp"
 )
 
+//
+//import (
+//	"auto-sign/request"
+//	"auto-sign/util"
+//	"encoding/json"
+//	"fmt"
+//	"net/http"
+//	"net/url"
+//	"regexp"
+//)
+//
 const LOGIN_URL = "https://ld246.com/api/v2/login"
 const LOGOUT_URL = "https://ld246.com/api/v2/logout"
 const LD_INDEX = "https://ld246.com/"
@@ -17,11 +28,13 @@ const CHECKIN = "https://ld246.com/activity/checkin"
 const CHECK = "https://ld246.com/activity/daily-checkin"
 const CSRFTOKEN_REG = `csrfToken: '(.*?)'`
 
+//
 type LD struct {
 	Username string
 	Password string
 }
 
+//
 func (ld *LD) Do() {
 	if ld.Username == "" {
 		fmt.Println("username is null")
@@ -31,37 +44,43 @@ func (ld *LD) Do() {
 		fmt.Println("password is null")
 		return
 	}
-	r := ld.Login(ld.Username, ld.Password)
+	r := ld.Login()
 	ld.Index(r.Token)
-	ld.checkin(r.Token)
+	ld.Checkin(r.Token)
 	ld.Logout(r.Token)
 }
 
-func (*LD) Login(username string, password string) LoginResult {
-	var r LoginResult
+func (ld *LD) Login() LoginResult {
+	var result LoginResult
 	fmt.Println("login .....")
 	params := make(map[string]string, 2)
-	params["userName"] = username
-	params["userPassword"] = util.GetMd5(password)
+	params["userName"] = ld.Username
+	params["userPassword"] = util.GetMd5(ld.Password)
 	requestBody, _ := json.Marshal(params)
 	headers := http.Header{}
 	headers.Set("Content-Type", "application/json;charset=UTF-8")
-	result, isSuccess := query("POST", LOGIN_URL, string(requestBody), headers)
+	r := request.Request{Method: "POST", Url: LOGIN_URL, Params: string(requestBody)}
+	req := r.CreateRequest()
+	req.Header = headers
+	body, isSuccess := request.Req(req, nil)
 	if isSuccess {
 		fmt.Println("login success")
-		_ = json.Unmarshal([]byte(result), &r)
-		return r
+		_ = json.Unmarshal([]byte(body), &result)
+		return result
 	}
 	fmt.Println("login failed")
-	return r
+	return result
 }
-func (*LD) checkin(token string) {
+
+func (*LD) Checkin(token string) {
 	if token == "" {
 		fmt.Println("token is null")
 		return
 	}
-	header := setCookie(token)
-	body, is := query("GET", CHECKIN, "", header)
+	r := request.Request{Method: "GET", Url: CHECKIN, Params: ""}
+	req := r.CreateRequest()
+	req.Header = setHeader()
+	body, is := request.Req(req, setCookie(token))
 	if is {
 		compile := regexp.MustCompile(CSRFTOKEN_REG)
 		once := compile.FindAllStringSubmatch(body, -1)
@@ -71,26 +90,32 @@ func (*LD) checkin(token string) {
 	}
 	fmt.Printf("request index failed %v\n", body)
 }
+
 func chek(token string, csrfToken string) {
 	if csrfToken == "" {
 		fmt.Println("csrfToken is null")
 		return
 	}
-	headers := setCookie(token)
 	params := url.Values{}
 	params.Set("token", csrfToken)
-	body, is := query("GET", CHECK, params.Encode(), headers)
+	r := request.Request{Method: "GET", Url: CHECK, Params: params.Encode()}
+	req := r.CreateRequest()
+	req.Header = setHeader()
+	body, is := request.Req(req, setCookie(token))
 	if is {
 		fmt.Printf("check success %v\n", body)
 	}
 }
+
 func (*LD) Index(token string) {
 	if token == "" {
 		fmt.Printf("token is null")
 		return
 	}
-	header := setCookie(token)
-	body, is := query("GET", LD_INDEX, "", header)
+	r := request.Request{Method: "GET", Url: LD_INDEX, Params: ""}
+	req := r.CreateRequest()
+	req.Header = setHeader()
+	body, is := request.Req(req, setCookie(token))
 	if is {
 		fmt.Printf("request success %v\n", body)
 		return
@@ -104,29 +129,23 @@ func (*LD) Logout(token string) {
 		fmt.Printf("token is null")
 		return
 	}
-	headers := setCookie(token)
-	result, b := query("POST", LOGOUT_URL, "", headers)
-	if b {
-		fmt.Printf("logout success %v\n", result)
+	r := request.Request{Method: "POST", Url: LOGOUT_URL, Params: ""}
+	req := r.CreateRequest()
+	req.Header = setHeader()
+	body, is := request.Req(req, setCookie(token))
+	if is {
+		fmt.Printf("logout success %v\n", body)
 		return
 	}
-	fmt.Printf("logout failed %v\n", result)
+	fmt.Printf("logout failed %v\n", body)
 }
-func query(method string, url string, params string, header http.Header) (string, bool) {
-	r := request.Request{Method: method, Url: url, Params: params, Headers: header}
-	body, _, is := r.Request()
-	if is {
-		return body, true
-	}
-	return "", false
+func setCookie(token string) map[string]string {
+	cookie := make(map[string]string, 0)
+	cookie["symphony"] = token
+	return cookie
 }
-
-func setCookie(token string) http.Header {
+func setHeader() http.Header {
 	headers := http.Header{}
-	if token == "" {
-		return headers
-	}
-	headers.Add("Cookie", fmt.Sprintf("symphony=%s", token))
 	headers.Set("User-Agent", "hb0730/1.0.0")
 	return headers
 }

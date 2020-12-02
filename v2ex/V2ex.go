@@ -3,13 +3,12 @@ package v2ex
 import (
 	"auto-sign/request"
 	"fmt"
-	"net/http"
 	"net/url"
 	"regexp"
 )
 
 type V2ex struct {
-	Cookie map[string]string
+	cookies request.Cookies
 }
 
 const ONCE_REG = `once=(.*?)'`
@@ -28,19 +27,17 @@ func (v *V2ex) Start(once string) {
 	}
 	params := url.Values{}
 	params.Set("once", once)
-	headers := setCookie(v.Cookie)
-	body, is := query("GET", STAR_URL, params.Encode(), headers)
+	body, is := request.Query("GET", STAR_URL, params.Encode(), v.cookies)
 	if is {
 		fmt.Println(body)
 	}
 }
 func (v *V2ex) Dayily() string {
-	if len(v.Cookie) <= 0 {
+	if len(v.cookies) <= 0 {
 		fmt.Println("cookie si null")
 		return ""
 	}
-	headers := setCookie(v.Cookie)
-	body, is := query("GET", DAYILY_URL, "", headers)
+	body, is := request.Query("GET", DAYILY_URL, "", v.cookies)
 	if is {
 		compile := regexp.MustCompile(ONCE_REG)
 		once := compile.FindAllStringSubmatch(body, -1)
@@ -50,27 +47,4 @@ func (v *V2ex) Dayily() string {
 		return ""
 	}
 	return ""
-}
-func query(method string, url string, params string, header http.Header) (string, bool) {
-	r := request.Request{Method: method, Url: url, Params: params, Headers: header}
-	body, _, is := r.Request()
-	if is {
-		return body, true
-
-	}
-	return "", false
-}
-
-func setCookie(cookie map[string]string) http.Header {
-	headers := http.Header{}
-	headers.Set("Cookie", mapToJson(cookie))
-	return headers
-}
-
-func mapToJson(params map[string]string) string {
-	str := ""
-	for k, v := range params {
-		str += k + "=" + v + "; "
-	}
-	return str
 }
