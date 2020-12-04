@@ -2,49 +2,38 @@ package v2ex
 
 import (
 	"auto-sign/request"
-	"fmt"
-	"net/url"
-	"regexp"
+	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/proto"
+	"log"
 )
 
 type V2ex struct {
 	cookies request.Cookies
 }
 
-const ONCE_REG = `once=(.*?)'`
-const DAYILY_URL = "https://www.v2ex.com/mission/daily"
-const STAR_URL = "https://www.v2ex.com/mission/daily/redeem"
+const INDEX = "https://www.v2ex.com"
 
 func (v *V2ex) Do() {
-	once := v.Dayily()
-	v.Start(once)
+	v.checkin()
 }
-
-func (v *V2ex) Start(once string) {
-	if once == "" {
-		fmt.Println("once is null")
-		return
-	}
-	params := url.Values{}
-	params.Set("once", once)
-	body, is := request.Query("GET", STAR_URL, params.Encode(), v.cookies)
-	if is {
-		fmt.Println(body)
-	}
+func (v *V2ex) checkin() {
+	page := rod.New().MustConnect().MustPage("")
+	defer page.MustClose()
+	_ = page.SetCookies(convertCookie(v.cookies))
+	page = page.MustNavigate(INDEX)
+	page.Race().ElementR("a", "领取今日的登录奖励").MustHandle(func(el *rod.Element) {
+		el.MustClick()
+		page.MustElementR("input", "领取 X 铜币").MustClick()
+		page.MustElementR(".message", "已成功领取每日登录奖励")
+		log.Println("签到成功")
+	}).Element(`.balance_area`).MustHandle(func(el *rod.Element) {
+		log.Println("已经签过到了")
+	}).MustDo()
 }
-func (v *V2ex) Dayily() string {
-	if len(v.cookies) <= 0 {
-		fmt.Println("cookie si null")
-		return ""
+func convertCookie(cookies request.Cookies) []*proto.NetworkCookieParam {
+	c := make([]*proto.NetworkCookieParam, 0)
+	for k, v := range cookies {
+		c = append(c, &proto.NetworkCookieParam{Name: k, Value: v, Domain: "www.v2ex.com", HTTPOnly: true})
 	}
-	body, is := request.Query("GET", DAYILY_URL, "", v.cookies)
-	if is {
-		compile := regexp.MustCompile(ONCE_REG)
-		once := compile.FindAllStringSubmatch(body, -1)
-		if len(once) > 0 {
-			return once[0][1]
-		}
-		return ""
-	}
-	return ""
+	return c
 }

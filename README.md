@@ -29,5 +29,8 @@ v2.Do()
 
 需要Cookie中的`v2`,`PB3_SESSION`
 
+# 依赖
+* [rod](github.com/go-rod/rod)
+
 # cron 定时任务
 可以使用 [gocron](https://github.com/go-co-op/gocron) 来做定时任务
