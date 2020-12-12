@@ -1,8 +1,8 @@
 package request
 
 import (
-	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -20,7 +20,7 @@ type AutoSign interface {
 
 func (rq *Request) CreateRequest() *http.Request {
 	if rq.Url == "" {
-		fmt.Println("request url is null")
+		log.Println("request url is null")
 		return nil
 	}
 	if rq.Method == "" {
@@ -28,7 +28,7 @@ func (rq *Request) CreateRequest() *http.Request {
 	}
 	request, e := http.NewRequest(rq.Method, rq.Url, strings.NewReader(rq.Params))
 	if e != nil {
-		fmt.Printf("http.NewRequest %v\n", e)
+		log.Printf("http.NewRequest %v\n", e)
 		return nil
 	}
 	return request
@@ -47,7 +47,7 @@ func Query(method string, url string, params string, cookies Cookies) (string, b
 }
 func Req(request *http.Request, cookies Cookies) (string, bool) {
 	if request == nil {
-		fmt.Println("request failed")
+		log.Println("request failed")
 		return "", false
 	}
 	SetCookie(cookies, request)
@@ -62,7 +62,7 @@ func Req(request *http.Request, cookies Cookies) (string, bool) {
 func ClientDo(request *http.Request) (string, []*http.Cookie, bool) {
 	response, e := http.DefaultClient.Do(request)
 	if e != nil {
-		fmt.Printf("request error %v\n", e)
+		log.Printf("request error %v\n", e)
 		return "", nil, false
 	}
 	defer response.Body.Close()

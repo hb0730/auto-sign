@@ -13,13 +13,13 @@ geekhub.Do()
 
 只需要Cookie中的`_session_id`
 
-## ld246 -未验证
+## ld246
 代码实现 [ld](https://ld246.com) 的签到(自动签到)
 ```go
 ld := LD{Username: "", Password: ""}
 ld.Do()
 ```
-## V2ex -未验证
+## V2ex
 代码实现 [V2ex](https://V2ex.com) 的签到()
 ```go
 params := make(map[string]string, 2)
@@ -30,7 +30,7 @@ v2.Do()
 需要Cookie中的`v2`,`PB3_SESSION`
 
 # 依赖
-* [rod](github.com/go-rod/rod)
+* [rod](https://github.com/go-rod/rod)
 
 # cron 定时任务
 可以使用 [gocron](https://github.com/go-co-op/gocron) 来做定时任务

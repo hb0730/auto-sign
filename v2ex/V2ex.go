@@ -2,8 +2,8 @@ package v2ex
 
 import (
 	"auto-sign/request"
+	"auto-sign/util"
 	"github.com/go-rod/rod"
-	"github.com/go-rod/rod/lib/proto"
 	"log"
 )
 
@@ -17,9 +17,15 @@ func (v *V2ex) Do() {
 	v.checkin()
 }
 func (v *V2ex) checkin() {
-	page := rod.New().MustConnect().MustPage("")
-	defer page.MustClose()
-	_ = page.SetCookies(convertCookie(v.cookies))
+	if len(v.cookies) == 0 {
+		log.Println("cookie len ==0")
+		return
+	}
+	browser := rod.New().MustConnect()
+	browser.MustSetCookies(util.ConvertCookies(v.cookies, ".v2ex.com"))
+	defer browser.MustClose()
+	page := browser.MustPage("")
+	// 来自https://github.com/go-rod/v2ex-example
 	page = page.MustNavigate(INDEX)
 	page.Race().ElementR("a", "领取今日的登录奖励").MustHandle(func(el *rod.Element) {
 		el.MustClick()
@@ -29,11 +35,4 @@ func (v *V2ex) checkin() {
 	}).Element(`.balance_area`).MustHandle(func(el *rod.Element) {
 		log.Println("已经签过到了")
 	}).MustDo()
-}
-func convertCookie(cookies request.Cookies) []*proto.NetworkCookieParam {
-	c := make([]*proto.NetworkCookieParam, 0)
-	for k, v := range cookies {
-		c = append(c, &proto.NetworkCookieParam{Name: k, Value: v, Domain: "www.v2ex.com", HTTPOnly: true})
-	}
-	return c
 }
