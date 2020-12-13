@@ -1,14 +1,12 @@
 package v2ex
 
 import (
-	"auto-sign/request"
 	"auto-sign/util"
 	"github.com/go-rod/rod"
-	"log"
 )
 
 type V2ex struct {
-	cookies request.Cookies
+	cookies util.Cookies
 }
 
 const INDEX = "https://www.v2ex.com"
@@ -18,7 +16,7 @@ func (v *V2ex) Do() {
 }
 func (v *V2ex) checkin() {
 	if len(v.cookies) == 0 {
-		log.Println("cookie len ==0")
+		util.Warn("cookie len ==0")
 		return
 	}
 	browser := rod.New().MustConnect()
@@ -31,8 +29,8 @@ func (v *V2ex) checkin() {
 		el.MustClick()
 		page.MustElementR("input", "领取 X 铜币").MustClick()
 		page.MustElementR(".message", "已成功领取每日登录奖励")
-		log.Println("签到成功")
+		util.Info("签到成功")
 	}).Element(`.balance_area`).MustHandle(func(el *rod.Element) {
-		log.Println("已经签过到了")
+		util.Info("已经签过到了")
 	}).MustDo()
 }

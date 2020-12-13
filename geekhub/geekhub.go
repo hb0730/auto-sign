@@ -1,8 +1,7 @@
 package geekhub
 
 import (
-	"auto-sign/request"
-	"log"
+	"auto-sign/util"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -16,12 +15,12 @@ const authenticity_token = `<meta name="csrf-token" content="(.*?)" />`
 
 type Geekhub struct {
 	//SessionId string
-	Cookies request.Cookies
+	Cookies util.Cookies
 }
 
 func (geekhub *Geekhub) Do() {
 	if len(geekhub.Cookies) <= 0 {
-		log.Println("session is  null")
+		util.Warn("session is  null")
 		return
 	}
 	token := geekhub.checkins()
@@ -32,48 +31,48 @@ func (geekhub *Geekhub) Do() {
 
 // checkins
 func (geekhub *Geekhub) checkins() string {
-	log.Println("get token ...")
-	r := request.Request{Method: "GET", Url: URL2, Params: ""}
+	util.Info("get token ...")
+	r := util.Request{Method: "GET", Url: URL2, Params: ""}
 	req := r.CreateRequest()
 	req.Header = setHeader()
-	request.SetCookie(geekhub.Cookies, req)
+	util.SetCookie(geekhub.Cookies, req)
 	body, is := geekhub.do(req)
 	if !is {
-		log.Println("session timout,reset session")
+		util.Warn("session timout,reset session")
 		return ""
 	}
 	compile := regexp.MustCompile(authenticity_token)
 	token := compile.FindAllStringSubmatch(body, -1)
 	if len(token) > 0 {
 		t := token[0][1]
-		log.Printf("token %s \n", t)
+		util.InfoF("token %s \n", t)
 		return t
 	}
-	log.Println("获取token失败,签到失败")
+	util.Error("获取token失败,签到失败")
 	return ""
 }
 
 //start
 func (geekhub *Geekhub) start(token string) {
-	log.Println("start sign ....")
+	util.Info("start sign ....")
 	values := url.Values{}
 	// 转义
 	values.Add("_method", "post")
 	values.Add("authenticity_token", token)
 	params := values.Encode()
-	r := request.Request{Method: "POST", Url: URL, Params: params}
+	r := util.Request{Method: "POST", Url: URL, Params: params}
 	req := r.CreateRequest()
 	req.Header = setHeader()
-	request.SetCookie(geekhub.Cookies, req)
+	util.SetCookie(geekhub.Cookies, req)
 	body, is := geekhub.do(req)
 	if is {
-		log.Printf("签到成功 %s\n", body)
+		util.InfoF("签到成功 %s\n", body)
 		return
 	}
-	log.Printf("签到失败 %v\n", body)
+	util.WarnF("签到失败 %v\n", body)
 }
 func (geekhub *Geekhub) do(req *http.Request) (string, bool) {
-	body, cookie, is := request.ClientDo(req)
+	body, cookie, is := util.ClientDo(req)
 	if is {
 		for _, v := range cookie {
 			if v.Name == "_session_id" {
