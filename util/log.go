@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// 来自https://github.com/wonderivan/logger
 type brush func(string) string
 
 func newBrush(color string) brush {
