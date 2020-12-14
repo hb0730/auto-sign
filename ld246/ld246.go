@@ -8,9 +8,8 @@ import (
 	"net/http"
 )
 
-const LOGIN_URL = "https://ld246.com/api/v2/login"
-const LOGOUT_URL = "https://ld246.com/api/v2/logout"
-const LD_INDEX = "https://ld246.com/"
+const LOGIN = "https://ld246.com/api/v2/login"
+const LOGOUT = "https://ld246.com/api/v2/logout"
 const CHECKIN = "https://ld246.com/activity/checkin"
 
 //
@@ -31,7 +30,6 @@ func (ld *LD) Do() {
 	}
 	r := ld.Login()
 	cookies := setCookie(r.Token)
-	ld.Index(cookies)
 	ld.Checkin(cookies)
 	ld.Logout(cookies)
 }
@@ -45,7 +43,7 @@ func (ld *LD) Login() LoginResult {
 	requestBody, _ := json.Marshal(params)
 	headers := http.Header{}
 	headers.Set("Content-Type", "application/json;charset=UTF-8")
-	r := util.Request{Method: "POST", Url: LOGIN_URL, Params: string(requestBody)}
+	r := util.Request{Method: "POST", Url: LOGIN, Params: string(requestBody)}
 	req := r.CreateRequest()
 	req.Header = headers
 	body, isSuccess := util.Req(req, nil)
@@ -80,29 +78,12 @@ func (*LD) Checkin(cookies util.Cookies) {
 
 }
 
-func (*LD) Index(cookies util.Cookies) {
-	if len(cookies) == 0 {
-		util.Warn("token is null")
-		return
-	}
-	r := util.Request{Method: "GET", Url: LD_INDEX, Params: ""}
-	req := r.CreateRequest()
-	req.Header = setHeader()
-	body, is := util.Req(req, cookies)
-	if is {
-		util.InfoF("request success %v\n", body)
-		return
-	}
-	util.WarnF("request index failed %v\n", body)
-
-}
-
 func (*LD) Logout(cookies util.Cookies) {
 	if len(cookies) == 0 {
 		util.Warn("token is null")
 		return
 	}
-	r := util.Request{Method: "POST", Url: LOGOUT_URL, Params: ""}
+	r := util.Request{Method: "POST", Url: LOGOUT, Params: ""}
 	req := r.CreateRequest()
 	req.Header = setHeader()
 	body, is := util.Req(req, cookies)
