@@ -2,16 +2,10 @@ package geekhub
 
 import (
 	"auto-sign/util"
-	"net/http"
-	"net/url"
-	"regexp"
+	"github.com/go-rod/rod"
 )
 
-const URL = "https://www.geekhub.com/checkins/start"
-
-const URL2 = "https://www.geekhub.com/checkins"
-
-const authenticity_token = `<meta name="csrf-token" content="(.*?)" />`
+const GEEK_HUB = "https://www.geekhub.com/checkins"
 
 type Geekhub struct {
 	//SessionId string
@@ -23,68 +17,23 @@ func (geekhub *Geekhub) Do() {
 		util.Warn("session is  null")
 		return
 	}
-	token := geekhub.checkins()
-	if token != "" {
-		geekhub.start(token)
-	}
+	geekhub.checkins()
 }
 
 // checkins
-func (geekhub *Geekhub) checkins() string {
+func (geekhub *Geekhub) checkins() {
 	util.Info("get token ...")
-	r := util.Request{Method: "GET", Url: URL2, Params: ""}
-	req := r.CreateRequest()
-	req.Header = setHeader()
-	util.SetCookie(geekhub.Cookies, req)
-	body, is := geekhub.do(req)
-	if !is {
-		util.Warn("session timout,reset session")
-		return ""
-	}
-	compile := regexp.MustCompile(authenticity_token)
-	token := compile.FindAllStringSubmatch(body, -1)
-	if len(token) > 0 {
-		t := token[0][1]
-		util.InfoF("token %s \n", t)
-		return t
-	}
-	util.Error("获取token失败,签到失败")
-	return ""
-}
 
-//start
-func (geekhub *Geekhub) start(token string) {
-	util.Info("start sign ....")
-	values := url.Values{}
-	// 转义
-	values.Add("_method", "post")
-	values.Add("authenticity_token", token)
-	params := values.Encode()
-	r := util.Request{Method: "POST", Url: URL, Params: params}
-	req := r.CreateRequest()
-	req.Header = setHeader()
-	util.SetCookie(geekhub.Cookies, req)
-	body, is := geekhub.do(req)
-	if is {
-		util.InfoF("签到成功 %s\n", body)
-		return
-	}
-	util.WarnF("签到失败 %v\n", body)
-}
-func (geekhub *Geekhub) do(req *http.Request) (string, bool) {
-	body, cookie, is := util.ClientDo(req)
-	if is {
-		for _, v := range cookie {
-			if v.Name == "_session_id" {
-				geekhub.Cookies["_session_id"] = v.Value
-			}
-		}
-		return body, is
-	}
-	return "", false
-}
-func setHeader() http.Header {
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/x-www-form-urlencoded")
-	return headers
+	browser := rod.New().MustConnect()
+	defer browser.MustClose()
+	browser.MustSetCookies(util.ConvertCookies(geekhub.Cookies, "www.geekhub.com"))
+	page := browser.MustPage(GEEK_HUB)
+	page.Race().ElementR(`a[href="/checkins/start"]`, `签到`).MustHandle(func(e *rod.Element) {
+		e.MustClick()
+		util.Info(e.MustHTML())
+		page.MustElementR("span", `今日已签到`)
+		util.Info("今日签到成功")
+	}).ElementR("span", `今日已签到`).MustHandle(func(c *rod.Element) {
+		util.Info("今日已签到成功")
+	}).MustDo()
 }

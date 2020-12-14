@@ -27,7 +27,7 @@ var colors = []brush{
 
 func Error(msg string) {
 	msg = colors[0](msg)
-	os.Stdout.Write(append([]byte(msg), '\n'))
+	out(msg)
 }
 func ErrorF(format string, v interface{}) {
 	Error(fmt.Sprintf(format, v))
@@ -35,7 +35,7 @@ func ErrorF(format string, v interface{}) {
 
 func Warn(msg string) {
 	msg = colors[1](msg)
-	os.Stdout.Write(append([]byte(msg), '\n'))
+	out(msg)
 }
 func WarnF(format string, v interface{}) {
 	Warn(fmt.Sprintf(format, v))
@@ -43,9 +43,13 @@ func WarnF(format string, v interface{}) {
 
 func Info(msg string) {
 	msg = colors[2](msg)
-	os.Stdout.Write(append([]byte(msg), '\n'))
+	out(msg)
 }
 
 func InfoF(format string, v interface{}) {
 	Info(fmt.Sprintf(format, v))
+}
+
+func out(msg string) {
+	os.Stdout.Write(append([]byte(msg), '\n'))
 }
