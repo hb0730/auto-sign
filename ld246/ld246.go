@@ -67,11 +67,11 @@ func (*LD) Checkin(cookies util.Cookies) {
 	browser.MustSetCookies(c)
 	page := browser.MustSetCookies(c).MustPage("")
 	page = page.MustNavigate(CHECKIN).MustWaitLoad()
-	page.Race().ElementR("a", `领取今日签到奖励`).MustHandle(func(e *rod.Element) {
+	page.Race().ElementR("a[class='btn green']", `领取今日签到奖励`).MustHandle(func(e *rod.Element) {
 		e.MustClick()
-		html := e.MustElement(`.btn`).MustText()
+		html := e.MustElement(`a[class='btn']`).MustText()
 		util.Info(html)
-	}).Element(`.btn`).MustHandle(func(c *rod.Element) {
+	}).Element(`a[class='btn']`).MustHandle(func(c *rod.Element) {
 		html := c.MustText()
 		util.Info(html)
 	}).MustDo()
