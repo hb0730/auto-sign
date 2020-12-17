@@ -6,21 +6,22 @@ import (
 )
 
 type V2ex struct {
-	cookies util.Cookies
+	Cookies util.Cookies
 }
 
 const INDEX = "https://www.v2ex.com"
 
 func (v *V2ex) Do() {
+	util.Info("v2ex checkin .....")
 	v.checkin()
 }
 func (v *V2ex) checkin() {
-	if len(v.cookies) == 0 {
+	if len(v.Cookies) == 0 {
 		util.Warn("cookie len ==0")
 		return
 	}
 	browser := rod.New().MustConnect()
-	browser.MustSetCookies(util.ConvertCookies(v.cookies, ".v2ex.com"))
+	browser.MustSetCookies(util.ConvertCookies(v.Cookies, ".v2ex.com"))
 	defer browser.MustClose()
 	page := browser.MustPage("")
 	// 来自https://github.com/go-rod/v2ex-example

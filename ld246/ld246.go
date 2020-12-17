@@ -20,6 +20,8 @@ type LD struct {
 
 //
 func (ld *LD) Do() {
+	util.Info("ld246 checkin .....")
+
 	if ld.Username == "" {
 		util.Warn("username is null")
 		return

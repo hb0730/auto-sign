@@ -1,0 +1,15 @@
+geekhub:
+  cookies:
+    _session_id:
+ld246:
+  user:
+    userName:
+    userPassword:
+v2ex:
+  cookies:
+    PB3_SESSION:
+    A2:
+cron:
+  geekhub: "0 0 * * *"
+  ld246: "0 0 * * *"
+  v2ex: "0 8 * * *"

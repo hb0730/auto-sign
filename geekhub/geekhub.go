@@ -13,6 +13,8 @@ type Geekhub struct {
 }
 
 func (geekhub *Geekhub) Do() {
+	util.Info("geekhub checkin .....")
+
 	if len(geekhub.Cookies) <= 0 {
 		util.Warn("session is  null")
 		return

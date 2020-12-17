@@ -29,16 +29,16 @@ func Error(msg string) {
 	msg = colors[0](msg)
 	out(msg)
 }
-func ErrorF(format string, v interface{}) {
-	Error(fmt.Sprintf(format, v))
+func ErrorF(format string, v ...interface{}) {
+	Error(fmt.Sprintf(format, v...))
 }
 
 func Warn(msg string) {
 	msg = colors[1](msg)
 	out(msg)
 }
-func WarnF(format string, v interface{}) {
-	Warn(fmt.Sprintf(format, v))
+func WarnF(format string, v ...interface{}) {
+	Warn(fmt.Sprintf(format, v...))
 }
 
 func Info(msg string) {
@@ -46,8 +46,8 @@ func Info(msg string) {
 	out(msg)
 }
 
-func InfoF(format string, v interface{}) {
-	Info(fmt.Sprintf(format, v))
+func InfoF(format string, v ...interface{}) {
+	Info(fmt.Sprintf(format, v...))
 }
 
 func out(msg string) {

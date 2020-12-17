@@ -30,7 +30,9 @@ v2.Do()
 需要Cookie中的`v2`,`PB3_SESSION`
 
 # 依赖
-* [rod](https://github.com/go-rod/rod)
+* [rod](https://github.com/go-rod/rod) 用于checkin
+* [yaml](https://github.com/go-yaml/yaml) 解析yaml文件
+* [cron](https://github.com/robfig/cron) 定时任务
 
 # cron 定时任务
 可以使用 [gocron](https://github.com/go-co-op/gocron) 来做定时任务
