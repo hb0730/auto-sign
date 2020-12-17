@@ -26,8 +26,8 @@ func (Geekhub) Support(t interface{}) error {
 	}
 	return &AutoSignError{Errors: []string{"类型不一致"}}
 }
-func (g Geekhub) Do() {
-	hub := geekhub.Geekhub{Cookies: g.Cookies}
+func (g Geekhub) Do(sign AutoSign) {
+	hub := geekhub.Geekhub{Cookies: sign.Geekhub.Cookies}
 	hub.Do()
 }
 
@@ -37,8 +37,8 @@ func (V V2ex) Support(t interface{}) error {
 	}
 	return &AutoSignError{Errors: []string{"类型不一致"}}
 }
-func (V V2ex) Do() {
-	v2 := v2ex.V2ex{Cookies: V.Cookies}
+func (V V2ex) Do(sign AutoSign) {
+	v2 := v2ex.V2ex{Cookies: sign.V2ex.Cookies}
 	v2.Do()
 }
 
@@ -48,8 +48,8 @@ func (Ld) Support(t interface{}) error {
 	}
 	return &AutoSignError{Errors: []string{"类型不一致"}}
 }
-func (l Ld) Do() {
-	ld := ld246.LD{Username: l.User["userName"], Password: l.User["password"]}
+func (l Ld) Do(sign AutoSign) {
+	ld := ld246.LD{Username: sign.Ld.User["userName"], Password: sign.Ld.User["password"]}
 	ld.Do()
 }
 

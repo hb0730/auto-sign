@@ -1,6 +1,6 @@
 package config
 
 type Support interface {
-	Do()
+	Do(AutoSign)
 	Support(t interface{}) error
 }

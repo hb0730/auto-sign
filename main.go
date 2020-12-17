@@ -37,12 +37,12 @@ func main() {
 			job, ok := jobs[k]
 			//新添加的
 			if !ok {
-				do(k, v, c)
+				do(k, v, c, autoSign)
 				// 已存在 ,且cron已修改
 			} else if ok && job.cron != v {
 				job := jobs[k]
 				c.Remove(job.contextId)
-				do(k, v, c)
+				do(k, v, c, autoSign)
 			}
 		}
 	})
@@ -57,14 +57,18 @@ func main() {
 	select {}
 }
 
-func do(k string, v string, c *cron.Cron) {
+// k 为yaml corn key
+// v 为yaml corn value
+// c 为*cron.Cron 定时任务
+// autoSign 为 config.AutoSign 配置参数
+func do(k string, v string, c *cron.Cron, autoSign config.AutoSign) {
 	// 所支持的
 	if supportJob, ok := supportJob[k]; ok {
 		id, err := c.AddFunc(v, func() {
 			for _, v := range support {
 				err := v.Support(supportJob)
 				if err == nil {
-					v.Do()
+					v.Do(autoSign)
 				}
 			}
 		})
