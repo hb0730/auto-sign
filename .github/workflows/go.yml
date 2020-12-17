@@ -24,7 +24,7 @@ jobs:
           ls
   release:
     name: Release
-    runs-om: [ubuntu-latest]
+    runs-on: [ubuntu-latest]
     steps:
       - name: release
         uses: xresloader/upload-to-github-release@master
