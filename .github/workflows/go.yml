@@ -22,7 +22,8 @@ jobs:
           go get -v -t -d ./...
       - name: Build
         run: |
-          echo "::set-output name=auto-sign::go build -a -o ."
+          go build -a -o .
+          echo "::set-output name=auto-sign::auto-sign"
   release:
     name: Release
     needs: build
