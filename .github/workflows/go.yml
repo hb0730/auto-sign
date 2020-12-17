@@ -1,5 +1,5 @@
 name: Go
-on: [ push,pull_request,tags ]
+on: [ push,pull_request ]
 jobs:
   build:
     name: Build with go ${{matrix.go_version}} on ${{matrix.os}}
@@ -23,4 +23,4 @@ jobs:
               dep ensure
           fi
       - name: Build
-        run:  go build -v -o main .
+        run: go build -v -o main .
