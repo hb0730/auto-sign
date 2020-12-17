@@ -22,9 +22,7 @@ jobs:
           go get -v -t -d ./...
       - name: Build
         run: |
-          file= $(go build -a -o .)
-          ls
-          echo "::set-output name=auto-sign::$file"
+          echo "::set-output name=auto-sign::go build -a -o ."
   release:
     name: Release
     needs: build
