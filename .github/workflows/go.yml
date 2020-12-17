@@ -30,3 +30,6 @@ jobs:
         with:
           file: "auto-sign*"
           delete_file: "auto-sign*"
+          tags: true
+          draft: false
+          overwrite: true
