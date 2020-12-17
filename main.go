@@ -4,6 +4,7 @@ import (
 	"auto-sign/util"
 	config "auto-sign/yml"
 	"github.com/robfig/cron/v3"
+	"sync"
 )
 
 type Jobs struct {
@@ -21,12 +22,17 @@ var supportJob = map[string]interface{}{
 var support = []config.Support{config.Geekhub{}, config.Ld{}, config.V2ex{}}
 
 func main() {
+	util.Info("start ..............")
+	var wg sync.WaitGroup
+	wg.Add(1)
 	c := cron.New()
 	_, err := c.AddFunc("* * * * *", func() {
 		autoSign, err := config.RedStruct()
+		util.InfoF("%v \n", autoSign)
 		if err != nil {
 			util.ErrorF("%v\n", err)
 			c.Stop()
+			wg.Done()
 		}
 		expressionMap := autoSign.Cron
 		if len(expressionMap) == 0 {
@@ -48,13 +54,13 @@ func main() {
 	})
 	if err != nil {
 		util.ErrorF("%v \n", err)
-		return
+		wg.Done()
 	}
 	// 其中任务
 	c.Start()
 	// 关闭任务
 	defer c.Stop()
-	select {}
+	wg.Wait()
 }
 
 // k 为yaml corn key
