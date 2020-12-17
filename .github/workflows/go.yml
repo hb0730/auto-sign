@@ -4,6 +4,8 @@ jobs:
   build:
     name: Build with go ${{matrix.go_version}} on ${{matrix.os}}
     runs-on: ${{matrix.os}}
+    outputs:
+      auto-sign: ${{setps.set-version.outputs.auto-sign}}
     strategy:
       matrix:
         go_version: [ 1.15 ]
@@ -22,6 +24,8 @@ jobs:
         run: |
           go build -a -o .
           ls
+          auto-sign=$(cp auto-sign* ${{matrix.os}}-auto-sign*)
+          echo "::set-output name=auto-sign::$auto-sign"
   release:
     name: Release
     needs: build
