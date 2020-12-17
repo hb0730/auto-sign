@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: file
         run: |
-        echo  ${{needs.build.outputs.auto-sign}}
+          echo ${{needs.build.outputs.auto-sign}}
           ls
       - name: release
         uses: xresloader/upload-to-github-release@master
