@@ -22,9 +22,9 @@ jobs:
         run: go build -a -o auto-sign main.go
       - name: zip
         run: |
-          mkdir ${{GITHUB_WORKSPACE}}/auto-sign-${{matrix.os}}
-          cp auto-sign ${{GITHUB_WORKSPACE}}/auto-sign-${{matrix.os}}
-          zip ${{GITHUB_WORKSPACE}}/auto-sign-${{matrix.os}}.zip ${{GITHUB_WORKSPACE}}/auto-sign-${{matrix.os}}
+          mkdir $GITHUB_WORKSPACE/auto-sign-${{matrix.os}}
+          cp auto-sign $GITHUB_WORKSPACE/auto-sign-${{matrix.os}}
+          zip $GITHUB_WORKSPACE/auto-sign-${{matrix.os}}.zip $GITHUB_WORKSPACE/auto-sign-${{matrix.os}}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
