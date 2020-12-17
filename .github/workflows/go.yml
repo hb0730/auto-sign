@@ -20,11 +20,12 @@ jobs:
           go get -v -t -d ./...
       - name: Build
         run: |
-          go build -a -o .
+          go build -a -o ./auto-sign main.go
           ls
-      - name: zip
-        run: |
-          mkdir auto-sign-${{matrix.os}}
-          cp auto-sign auto-sign-${{matrix.os}}
-          zip auto-sign-${{matrix.os}}.zip auto-sign-${{matrix.os}}
-          ls
+      - name: Upload asset to release
+        uses: gacts/upload-to-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: './auto-sign'
+          type: 'application/octet-stream'
