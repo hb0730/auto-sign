@@ -20,7 +20,7 @@ jobs:
           go get -v -t -d ./...
       - name: Build
         run: |
-          go build -a -o auto-sign main.go
+          go build -a -o .
           ls
       - name: zip
         run: |
