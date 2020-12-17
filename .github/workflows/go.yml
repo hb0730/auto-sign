@@ -23,9 +23,8 @@ jobs:
       - name: Build
         run: |
           go build -a -o .
-          cp auto-sign* ${{matrix.os}}-auto-sign*
           ls
-          echo "::set-output name=auto-sign::${{matrix.os}}-auto-sign*"
+          echo "::set-output name=auto-sign::auto-sign*"
   release:
     name: Release
     needs: build
