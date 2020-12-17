@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: |
           go build -a -o .
-          echo "::set-output name=auto-sign::auto-sign"
+          echo "::set-output name=auto-sign::$(go build -a -o .)"
   release:
     name: Release
     needs: build
