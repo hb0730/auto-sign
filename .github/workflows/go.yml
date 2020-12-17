@@ -29,4 +29,3 @@ jobs:
         with:
           file: "auto-sign*"
           delete_file: "auto-sign*"
-          branches: ["main"]
