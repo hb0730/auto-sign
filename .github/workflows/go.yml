@@ -22,7 +22,8 @@ jobs:
         run: |
           go build -a -o .
           ls
-      - name: xresloader/upload-to-github-release@master
+      - name: release
+        uses: xresloader/upload-to-github-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
