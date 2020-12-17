@@ -19,7 +19,6 @@ jobs:
         run: |
           go get -v -t -d ./...
       - name: Build
-        id: ${{matrix.os}}
         run: |
           go build -a -o .
           ls
