@@ -22,9 +22,9 @@ jobs:
           go get -v -t -d ./...
       - name: Build
         run: |
-          go build -a -o .
+          file= $(go build -a -o .)
           ls
-          echo "::set-output name=auto-sign::auto-sign*"
+          echo "::set-output name=auto-sign::$file"
   release:
     name: Release
     needs: build
@@ -32,7 +32,8 @@ jobs:
     steps:
       - name: file
         run: |
-          echo ${{needs.build.outputs.auto-sign}}
+          auto-sign= ${{needs.build.outputs.auto-sign}}
+          echo $auto-sign
           ls
 #      - name: release
 #        uses: xresloader/upload-to-github-release@master
