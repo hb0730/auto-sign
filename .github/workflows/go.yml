@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         go_version: [ 1.15 ]
-        os: [ windows-latest,ubuntu-latest,macos-latest ]
+        os: [ ubuntu-latest ]
     steps:
       - name: Set up Go ${{matrix.go_version}}
         uses: actions/setup-go@v2
@@ -23,20 +23,10 @@ jobs:
       - name: Build
         run: |
           go build -a -o .
-          echo "::set-output name=auto-sign::$(go build -a -o .)"
-  release:
-    name: Release
-    needs: build
-    runs-on: [ ubuntu-latest ]
-    steps:
-      - name: file
-        run: |
-          echo ${{needs.build.outputs.auto-sign}}
-          ls
-#      - name: release
-#        uses: xresloader/upload-to-github-release@master
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          file: "auto-sign*"
-#          delete_file: "auto-sign*"
+      - name: release
+        uses: xresloader/upload-to-github-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "auto-sign*"
+          delete_file: "auto-sign*"
