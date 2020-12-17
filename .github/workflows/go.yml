@@ -30,6 +30,10 @@ jobs:
     needs: build
     runs-on: [ ubuntu-latest ]
     steps:
+      - name: file
+        run: |
+        echo  ${{needs.build.outputs.auto-sign}}
+          ls
       - name: release
         uses: xresloader/upload-to-github-release@master
         env:
