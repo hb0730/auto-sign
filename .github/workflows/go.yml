@@ -4,6 +4,8 @@ jobs:
   build:
     name: Build with go ${{matrix.go_version}} on ${{matrix.os}}
     runs-on: ${{matrix.os}}
+    outputs:
+      output-${{matrix.os}}: ${{steps.matrix.os.auto-sign}}
     strategy:
       matrix:
         go_version: [ 1.15 ]
@@ -19,12 +21,14 @@ jobs:
         run: |
           go get -v -t -d ./...
       - name: Build
+        id: ${{matrix.os}}
         run: |
           go build -a -o .
           ls
   release:
     name: Release
-    runs-on: [ubuntu-latest]
+    nedds: build
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: release
         uses: xresloader/upload-to-github-release@master
