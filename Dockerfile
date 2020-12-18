@@ -9,7 +9,7 @@ RUN cd auto-sign-${VERSION} && mv -f * .. && cd .. && rm -rf auto-sign-${VERSION
 RUN go mod download
 RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -a -o . && ls
 
-FROM alpine:3.10 AS final
+FROM rodorg/rod AS final
 WORKDIR /app
 COPY --from=builder /build/auto-sign /app/
 COPY ./config /app/config
