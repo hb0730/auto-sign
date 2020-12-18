@@ -1,12 +1,14 @@
 FROM alpine:3.10
 
 ARG VERSION=0.0.2
+ARG FILE_NAME=auto-sign
 
-ENV AUTO_SIGN_URL=https://github.com/hb0730/auto-sign/releases/download/${VERSION}/auto-sign
-ENV FILE_NAME=app
+ENV AUTO_SIGN_URL=https://github.com/hb0730/auto-sign/releases/download/${VERSION}/${FILE_NAME}
 
-COPY ./config /opt/config
+WORKDIR /opt
 
-RUN curl -s ${AUTO_SIGN_URL} -o ${FILE_NAME} && mv ${FILE_NAME} /opt
+COPY ./config ./config
 
-ENTRYPOINT [ "/opt/${FILE_NAME}" ]
+RUN wget ${AUTO_SIGN_URL} && ls
+
+ENTRYPOINT [ "./auto-sign" ]
