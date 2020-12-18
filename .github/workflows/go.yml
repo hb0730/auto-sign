@@ -39,7 +39,7 @@ jobs:
     steps:
       - name: test
         run: |
-          version=${{GITHUB_REF}}
+          version=${{github.ref}}
           echo $version
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v1
