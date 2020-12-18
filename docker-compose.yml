@@ -1,0 +1,10 @@
+version: '3.1'
+services:
+  auto-sign:
+    restart: always
+    image: auto-sign:latest
+    environment:
+      - TZ= 'Asia/Shanghai'
+    container_name: auto-sign
+    volumes:
+      - ./config:/app/config/
