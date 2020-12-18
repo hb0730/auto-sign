@@ -26,7 +26,7 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	c := cron.New()
-	_, err := c.AddFunc("0 6 * * *", func() {
+	_, err := c.AddFunc("0 */12 * * *", func() {
 		autoSign, err := config.RedStruct()
 		util.InfoF("%v \n", autoSign)
 		if err != nil {
