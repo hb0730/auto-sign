@@ -42,7 +42,7 @@ jobs:
           version=${{github.ref}}
           echo $version
           echo ${{contains(github.ref,'tags')}}
-          tag= `basename $version`
+          tag= basename $version
           echo $tag
 
 #      - name: Set up QEMU
