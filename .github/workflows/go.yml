@@ -62,7 +62,7 @@ jobs:
           file: ./Dockerfile
           push: true
           build-args: |
-            version= ${{env.tag}}
+            version= $auto-version
           tags: |
             hb0730/auto-sign:latest
-            hb0730/auto-sign:${{env.tag}}
+            hb0730/auto-sign:$auto-version
