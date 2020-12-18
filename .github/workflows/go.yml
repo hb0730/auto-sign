@@ -27,7 +27,7 @@ jobs:
       - name: test
         run: |
           echo "AUTO_VERSION=0.0.2" >> $GITHUB_ENV
-          echo ${{env.AUTO_VERSION}}
+          echo ${{AUTO_VERSION}}
       - name: release
         uses: xresloader/upload-to-github-release@v1
         env:
