@@ -40,10 +40,11 @@ jobs:
       - name: test
         run: |
           version=${{github.ref}}
-          tag= basename $version
           echo $version
-          echo $tag
           echo ${{contains(github.ref,'tags')}}
+          tag= `basename $version`
+          echo $tag
+
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v1
 #      - name: Set up Docker Buildx
