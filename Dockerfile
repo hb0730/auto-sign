@@ -1,14 +1,17 @@
-FROM alpine:3.10
-
+FROM golang:1.15-alpine AS builder
+WORKDIR /build
+ENV GOPROXY https://goproxy.cn
 ARG VERSION=0.0.2
-ARG FILE_NAME=auto-sign
+ENV URL=https://github.com/hb0730/auto-sign/archive/${VERSION}.tar.gz
+ADD ${URL} .
+RUN tar -zxvf ${VERSION}.tar.gz && rm -f ${VERSION}.tar.gz
+RUN cd auto-sign-${VERSION} && mv -f * .. && cd .. && rm -rf auto-sign-${VERSION}  && ls
+RUN go mod download
+RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -a -o . && ls
 
-ENV AUTO_SIGN_URL=https://github.com/hb0730/auto-sign/releases/download/${VERSION}/${FILE_NAME}
+FROM alpine:3.10 AS final
+WORKDIR /app
+COPY --from=builder /build/auto-sign /app/
+COPY ./config /app/config
 
-WORKDIR /opt
-
-COPY ./config ./config
-
-RUN wget ${AUTO_SIGN_URL} && ls
-
-ENTRYPOINT [ "./auto-sign" ]
+ENTRYPOINT ["/app/auto-sign"]
