@@ -24,12 +24,6 @@ jobs:
         run: |
           go build .
           ls
-      - name: test
-        run: |
-          version=${{github.ref}}
-          tag= basename $version
-          echo "AUTO_VERSION=$(echo $tag)" >> $GITHUB_ENV
-          echo $AUTO_VERSION
       - name: release
         uses: xresloader/upload-to-github-release@v1
         env:
@@ -49,8 +43,7 @@ jobs:
         run: |
           version=${{github.ref}}
           tag= basename $version
-          echo $tag
-          echo "AUTO_VERSION=$tag" >> $GITHUB_ENV
+          echo "AUTO_VERSION=$(echo $tag)" >> $GITHUB_ENV
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
