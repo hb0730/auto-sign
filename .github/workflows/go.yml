@@ -39,7 +39,7 @@ jobs:
     needs: [ build ]
     if: ${{contains(github.ref,'tags')}}
     steps:
-      - name: test
+      - name: tag
         run: |
           version=${{github.ref}}
           tag= basename $version
@@ -62,7 +62,7 @@ jobs:
           file: ./Dockerfile
           push: true
           build-args: |
-            version= ${{env.auto-version}}
+            version= ${{env.tag}}
           tags: |
             hb0730/auto-sign:latest
-            hb0730/auto-sign:${{env.auto-version}}
+            hb0730/auto-sign:${{env.tag}}
