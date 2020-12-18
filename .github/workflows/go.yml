@@ -22,7 +22,7 @@ jobs:
           go get -v -t -d ./...
       - name: Build
         run: |
-          make build
+          go build auto-sign
       - name: release
         uses: xresloader/upload-to-github-release@master
         env:
