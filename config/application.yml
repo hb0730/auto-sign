@@ -4,7 +4,7 @@ geekhub:
 ld246:
   user:
     userName:
-    userPassword:
+    password:
 v2ex:
   cookies:
     PB3_SESSION:
