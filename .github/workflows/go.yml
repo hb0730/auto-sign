@@ -47,6 +47,8 @@ jobs:
           echo "AUTO_VERSION=$(echo $tag)" >> $GITHUB_ENV
           echo ::set-output name=AUTO_VERSION::$(basename $version)
           echo ${{steps.tag.outputs.AUTO_VERSION}}
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -68,3 +70,5 @@ jobs:
           tags: |
             hb0730/auto-sign:latest
             hb0730/auto-sign:${{steps.tag.outputs.AUTO_VERSION}}
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
