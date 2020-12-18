@@ -26,7 +26,9 @@ jobs:
           ls
       - name: test
         run: |
-          echo "AUTO_VERSION=0.0.2" >> $GITHUB_ENV
+          version=${{github.ref}}
+          tag= basename $version
+          echo "AUTO_VERSION=$(echo $tag)" >> $GITHUB_ENV
           echo $AUTO_VERSION
       - name: release
         uses: xresloader/upload-to-github-release@v1
@@ -49,7 +51,6 @@ jobs:
           tag= basename $version
           echo $tag
           echo "AUTO_VERSION=$tag" >> $GITHUB_ENV
-          echo ${{env.AUTO_VERSION}}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -67,7 +68,7 @@ jobs:
           file: ./Dockerfile
           push: true
           build-args: |
-            version= ${{env.AUTO_VERSION}}
+            version= $AUTO_VERSION
           tags: |
             hb0730/auto-sign:latest
-            hb0730/auto-sign:${{env.AUTO_VERSION}}
+            hb0730/auto-sign:$AUTO_VERSION
