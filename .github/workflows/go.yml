@@ -44,6 +44,8 @@ jobs:
           version=${{github.ref}}
           tag= basename $version
           echo "AUTO_VERSION=$(echo $tag)" >> $GITHUB_ENV
+          echo $AUTO_VERSION
+          echo ::set-output name=AUTO_VERSION::$tag
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -61,7 +63,7 @@ jobs:
           file: ./Dockerfile
           push: true
           build-args: |
-            version= $AUTO_VERSION
+            VERSION = ${{steps.tag.outputs.AUTO_VERSION}}
           tags: |
             hb0730/auto-sign:latest
-            hb0730/auto-sign:$AUTO_VERSION
+            hb0730/auto-sign:${{steps.tag.outputs.AUTO_VERSION}}
