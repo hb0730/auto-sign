@@ -30,8 +30,8 @@ func (v *V2ex) checkin() {
 		el.MustClick()
 		page.MustElementR("input", "领取 X 铜币").MustClick()
 		page.MustElementR(".message", "已成功领取每日登录奖励")
-		util.Info("签到成功")
+		util.Info("v2ex 签到成功")
 	}).Element(`.balance_area`).MustHandle(func(el *rod.Element) {
-		util.Info("已经签过到了")
+		util.Info("v2ex 已经签过到了")
 	}).MustDo()
 }

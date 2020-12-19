@@ -33,8 +33,8 @@ func (geekhub *Geekhub) checkins() {
 	page.Race().ElementR(`a[href="/checkins/start"]`, `签到`).MustHandle(func(e *rod.Element) {
 		e.MustClick()
 		page.MustElementR("span", `今日已签到`)
-		util.Info("今日签到成功")
+		util.Info("geekhub 今日签到成功")
 	}).ElementR("span", `今日已签到`).MustHandle(func(c *rod.Element) {
-		util.Info("今日已签到成功")
+		util.Info("geekhub 今日已签到成功")
 	}).MustDo()
 }

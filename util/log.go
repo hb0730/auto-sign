@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
 // 来自https://github.com/wonderivan/logger
@@ -12,7 +13,7 @@ func newBrush(color string) brush {
 	pre := "\033["
 	reset := "\033[0m"
 	return func(text string) string {
-		return pre + color + "m" + text + reset
+		return pre + color + "m" + time.Now().Format("2006-01-02 15:04:05") + " " + text + reset
 	}
 }
 
