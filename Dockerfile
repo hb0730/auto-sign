@@ -1,7 +1,7 @@
 FROM golang:1.15-alpine AS builder
 WORKDIR /build
 ENV GOPROXY https://goproxy.cn
-ARG VERSION=0.0.2
+ARG VERSION
 ENV URL=https://github.com/hb0730/auto-sign/archive/${VERSION}.tar.gz
 ADD ${URL} .
 RUN tar -zxvf ${VERSION}.tar.gz && rm -f ${VERSION}.tar.gz
