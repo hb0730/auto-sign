@@ -11,7 +11,7 @@ jobs:
       - name: Mirror the Github organization repos to Gitee
         uses: Yikun/gitee-mirror-action@v0.10
         with:
-          src: https://github.com/hb0730/auto-sign
-          dst: https://gitee.com/hb0730/auto-sign
+          src: github/hb0730
+          dst: gitee/hb0730
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
