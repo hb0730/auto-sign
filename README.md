@@ -33,6 +33,7 @@ v2.Do()
 * [rod](https://github.com/go-rod/rod) 用于checkin
 * [yaml](https://github.com/go-yaml/yaml) 解析yaml文件
 * [cron](https://github.com/robfig/cron) 定时任务
+* [mail](https://github.com/xhit/go-simple-mail) email发送
 
 # cron 定时任务
 可以使用 [gocron](https://github.com/go-co-op/gocron) 来做定时任务

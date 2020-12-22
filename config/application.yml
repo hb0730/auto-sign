@@ -13,3 +13,11 @@ cron:
   geekhub: "0 0 * * *"
   ld246: "0 0 * * *"
   v2ex: "0 8 * * *"
+
+email:
+  host:
+  protocol:
+  port:
+  username:
+  password:
+  fromName:

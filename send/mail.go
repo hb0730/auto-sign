@@ -1,31 +1,81 @@
 package send
 
 import (
-	"net/smtp"
-	"strings"
+	"auto-sign/util"
+	"fmt"
+	mail "github.com/xhit/go-simple-mail/v2"
+	"sync"
 )
 
 type Mail struct {
-	username string
-	password string
-	host     string
+	sync.Mutex
+	Host     string
+	Protocol string
+	Port     int
+	Username string
+	Password string
+	FromName string
 }
 
-func (mail *Mail) Send(to string, subject string, content string) error {
-	auth := smtp.PlainAuth("", mail.username, mail.password, mail.host)
-	tos := strings.Split(to, ";")
-	return smtp.SendMail(mail.host, auth, mail.username, tos, []byte(content))
+var server *mail.SMTPServer
+
+// 创建新的*mail.SMTPServer 只会创建一次
+func (em *Mail) NewServer() *mail.SMTPServer {
+	em.Lock()
+	defer em.Unlock()
+	if server == nil {
+		client := mail.NewSMTPClient()
+		client.Host = em.Host
+		client.Port = em.Port
+		client.Username = em.Username
+		client.Password = em.Password
+		// 是否加密
+		client.Encryption = mail.EncryptionSSL
+		server = client
+		return client
+	}
+	return server
 }
 
-func sendMsg(content string, subject string, to string) []byte {
-	//[]byte("to: " +to+"\r\n"+"Subject: "+subject+"\r\n"+"")
-	strBuilder := strings.Builder{}
-	strBuilder.WriteString("to: ")
-	strBuilder.WriteString(to)
-	strBuilder.WriteString("\r\n")
-	strBuilder.WriteString("Subject: ")
-	strBuilder.WriteString(subject)
-	strBuilder.WriteString("\r\n")
-	strBuilder.WriteString("")
-	return []byte(strBuilder.String())
+//GetServer 获取*mail.SMTPServer，可能为nil
+func GetServer() *mail.SMTPServer {
+	return server
+}
+
+func (em *Mail) Send(subject string, content string, to string) error {
+	smtpClient, err := em.NewServer().Connect()
+	if err != nil {
+		util.ErrorF("Expected nil, got %v connecting to client", err)
+		return err
+	}
+
+	email := mail.NewMSG()
+	email.SetFrom(setFrom(em.FromName, em.Username)).
+		AddTo(to).
+		SetSubject(subject).
+		SetBody(mail.TextHTML, content)
+	err = email.Send(smtpClient)
+	defer smtpClient.Close()
+	return err
+
+}
+func (em *Mail) SendToArray(subject string, content string, to ...string) error {
+	smtpClient, err := em.NewServer().Connect()
+	if err != nil {
+		util.ErrorF("Expected nil, got %v connecting to client", err)
+		return err
+	}
+
+	email := mail.NewMSG()
+	email.SetFrom(setFrom(em.FromName, em.Username)).
+		AddTo(to...).
+		SetSubject(subject).
+		SetBody(mail.TextHTML, content)
+	err = email.Send(smtpClient)
+	defer smtpClient.Close()
+	return err
+}
+
+func setFrom(from string, username string) string {
+	return fmt.Sprintf("From %s <%s>", from, username)
 }
