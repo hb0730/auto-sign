@@ -71,7 +71,7 @@ func do(k string, v string, c *cron.Cron) {
 	// 所支持的
 	if supportJob, ok := supportJobs[k]; ok {
 		job := supportJob.(config.Support)
-		job = job.Support(autoSignConfig)
+		job = job.Supports(autoSignConfig)
 		id, err := c.AddJob(v, job)
 		if err == nil {
 			jobs[k] = Jobs{contextId: id, jobName: k, cron: v}
