@@ -1,6 +1,7 @@
 package geekhub
 
 import (
+	"auto-sign/browser"
 	"auto-sign/util"
 	"github.com/go-rod/rod"
 )
@@ -25,11 +26,9 @@ func (geekhub *Geekhub) Do() {
 // checkins
 func (geekhub *Geekhub) checkins() {
 	util.Info("get token ...")
-
-	browser := rod.New().MustConnect()
-	defer browser.MustClose()
-	browser.MustSetCookies(util.ConvertCookies(geekhub.Cookies, "www.geekhub.com"))
-	page := browser.MustPage(GEEK_HUB)
+	b := browser.NewBrowser(true)
+	defer b.MustClose()
+	page := b.MustSetCookies(util.ConvertCookies(geekhub.Cookies, "www.geekhub.com")).MustPage(GEEK_HUB).MustWaitLoad()
 	page.Race().ElementR(`a[href="/checkins/start"]`, `签到`).MustHandle(func(e *rod.Element) {
 		e.MustClick()
 		page.MustElementR("span", `今日已签到`)

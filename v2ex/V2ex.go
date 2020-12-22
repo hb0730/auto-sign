@@ -1,6 +1,7 @@
 package v2ex
 
 import (
+	"auto-sign/browser"
 	"auto-sign/util"
 	"github.com/go-rod/rod"
 )
@@ -20,12 +21,11 @@ func (v *V2ex) checkin() {
 		util.Warn("cookie len ==0")
 		return
 	}
-	browser := rod.New().MustConnect()
-	browser.MustSetCookies(util.ConvertCookies(v.Cookies, ".v2ex.com"))
-	defer browser.MustClose()
-	page := browser.MustPage("")
+	b := browser.NewBrowser(true)
+	defer b.MustClose()
 	// 来自https://github.com/go-rod/v2ex-example
-	page = page.MustNavigate(INDEX)
+	page := b.MustSetCookies(util.ConvertCookies(v.Cookies, "www.v2ex.com")).MustPage(INDEX).MustWaitLoad()
+	//page = page.MustNavigate(INDEX)
 	page.Race().ElementR("a", "领取今日的登录奖励").MustHandle(func(el *rod.Element) {
 		el.MustClick()
 		page.MustElementR("input", "领取 X 铜币").MustClick()

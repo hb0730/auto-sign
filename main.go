@@ -58,7 +58,7 @@ func main() {
 		wg.Done()
 	}
 	// 其中任务
-	c.Start()
+	c.Run()
 	// 关闭任务
 	defer c.Stop()
 	wg.Wait()

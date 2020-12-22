@@ -1,16 +1,22 @@
 package ld246
 
 import (
+	"auto-sign/browser"
 	"auto-sign/util"
 	"encoding/json"
+	"fmt"
 	"github.com/go-rod/rod"
-	"github.com/go-rod/rod/lib/launcher"
 	"net/http"
 )
 
 const LOGIN = "https://ld246.com/api/v2/login"
 const LOGOUT = "https://ld246.com/api/v2/logout"
 const CHECKIN = "https://ld246.com/activity/checkin"
+
+var headers = map[string]string{
+	"User-Agent": "auto-sign/1.0.4",
+	"Accept":     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+}
 
 //
 type LD struct {
@@ -43,11 +49,11 @@ func (ld *LD) Login() LoginResult {
 	params["userName"] = ld.Username
 	params["userPassword"] = util.GetMd5(ld.Password)
 	requestBody, _ := json.Marshal(params)
-	headers := http.Header{}
-	headers.Set("Content-Type", "application/json;charset=UTF-8")
+	header := http.Header{}
+	header.Set("Content-Type", "application/json;charset=UTF-8")
 	r := util.Request{Method: "POST", Url: LOGIN, Params: string(requestBody)}
 	req := r.CreateRequest()
-	req.Header = headers
+	req.Header = header
 	body, isSuccess := util.Req(req, nil)
 	if isSuccess {
 		util.Info("login success")
@@ -62,22 +68,20 @@ func (*LD) Checkin(cookies util.Cookies) {
 		util.Warn("token is null")
 		return
 	}
-	c := util.ConvertCookies(cookies, ".ld246.com")
-	u := launcher.New().StartURL("about:blank").MustLaunch()
-	browser := rod.New().ControlURL(u).MustConnect()
-	defer browser.MustClose()
-	browser.MustSetCookies(c)
-	page := browser.MustSetCookies(c).MustPage("")
-	page = page.MustNavigate(CHECKIN).MustWaitLoad()
-	page.Race().ElementR("a[class='btn green']", `领取今日签到奖励`).MustHandle(func(e *rod.Element) {
+	b := browser.NewBrowser(true)
+	defer b.MustClose()
+	page := b.MustSetCookies(util.ConvertCookies(cookies, ".ld246.com")).MustPage("")
+	page.MustSetExtraHeaders(convertHeader()...)
+	page.MustNavigate(CHECKIN).MustWaitLoad()
+	page.Race().ElementR(`a[class="btn green"]`, `领取今日签到奖励`).MustHandle(func(e *rod.Element) {
 		e.MustClick()
-		html := e.MustElement(`a[class='btn']`).MustText()
-		util.Info(html)
-	}).Element(`a[class='btn']`).MustHandle(func(c *rod.Element) {
-		html := c.MustText()
-		util.Info(html)
+		html := e.MustElement(`a[class="btn"]`).MustText()
+		util.Info(fmt.Sprintf("签到成功, %s \n", html))
+	}).Element(`a[class="btn"]`).MustHandle(func(e *rod.Element) {
+		html := e.MustText()
+		str := fmt.Sprintf("今日已签到, %s \n", html)
+		util.Info(str)
 	}).MustDo()
-
 }
 
 func (*LD) Logout(cookies util.Cookies) {
@@ -96,15 +100,26 @@ func (*LD) Logout(cookies util.Cookies) {
 	util.WarnF("logout failed %v\n", body)
 }
 func setCookie(token string) map[string]string {
+	if len(token) == 0 {
+		return nil
+	}
 	cookie := make(map[string]string, 0)
 	cookie["symphony"] = token
 	return cookie
 }
 func setHeader() http.Header {
-	headers := http.Header{}
-	headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36")
-	headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-	return headers
+	header := http.Header{}
+	for k, v := range headers {
+		header.Set(k, v)
+	}
+	return header
+}
+func convertHeader() []string {
+	header := make([]string, 0)
+	for k, v := range headers {
+		header = append(append(header, k), v)
+	}
+	return header
 }
 
 type LoginResult struct {
