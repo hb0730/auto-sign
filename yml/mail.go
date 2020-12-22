@@ -9,6 +9,7 @@ type Mail struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	FromName string `yaml:"fromName"`
+	To       string `yaml:"to"`
 }
 
 func (mail Mail) Send(subject string, content string, to string) error {

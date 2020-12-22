@@ -24,7 +24,7 @@ type AutoSignConfig struct {
 	Ld      Ld                `yaml:"ld246"`
 	V2ex    V2ex              `yaml:"v2ex"`
 	Cron    map[string]string `yaml:"cron"`
-	mail    Mail              `yaml:"mail"`
+	Mail    Mail              `yaml:"mail"`
 }
 
 func (g AutoSignConfig) GetConfig(typeInt int) interface{} {
