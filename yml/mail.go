@@ -14,10 +14,16 @@ type Mail struct {
 
 func (mail Mail) Send(subject string, content string, to string) error {
 	m := convert(mail)
+	if m.Password == "" && m.Username == "" {
+		return nil
+	}
 	return m.Send(subject, content, to)
 }
 func (mail Mail) SendToArray(subject string, content string, to ...string) error {
 	m := convert(mail)
+	if m.Password == "" && m.Username == "" {
+		return nil
+	}
 	return m.SendToArray(subject, content, to...)
 }
 
