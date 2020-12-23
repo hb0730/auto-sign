@@ -4,20 +4,22 @@ import autoAppletuan "auto-sign/appletuan"
 
 // AppleTuan  https://appletuan.com/
 type AppleTuan struct {
-	AutoSign
+	AbstractSupport
 	//Cookies 用于签到
 	Cookies map[string]string `yaml:"cookies,omitempty"`
 }
 
 //Supports 所支持的，返回具体类型
-func (AppleTuan) Supports(config AutoSignConfig) Support {
+func (AppleTuan) Supports(config YamlConfig) Support {
+	// 这里的设置主要解决 *AbstractSupport.Run时nil问题
+	// 故儿需要将其重新设置
 	g := config.Appletuan
 	g.Sub = g
 	g.SubName = "appletuan"
 	return g
 }
 
-//Dovoid 有*AutoSign.Run 执行
+//Dovoid 由 *AbstractSupport.Run 执行
 func (tuan AppleTuan) DoVoid() {
 	tuan.Do(tuan.Cookies)
 }

@@ -15,7 +15,7 @@ type Jobs struct {
 
 var jobs = make(map[string]Jobs)
 
-var autoSignConfig config.AutoSignConfig
+var yamlConfig config.YamlConfig
 
 func main() {
 	util.Info("start ..............")
@@ -24,14 +24,14 @@ func main() {
 	c := cron.New()
 	_, err := c.AddFunc("30 * * * *", func() {
 		var err error
-		autoSignConfig, err = config.RedStruct()
-		util.InfoF("%v \n", autoSignConfig)
+		yamlConfig, err = config.RedStruct()
+		util.InfoF("%v \n", yamlConfig)
 		if err != nil {
 			util.ErrorF("%v\n", err)
 			c.Stop()
 			wg.Done()
 		}
-		expressionMap := autoSignConfig.Cron
+		expressionMap := yamlConfig.Cron
 		if len(expressionMap) == 0 {
 			return
 		}
@@ -67,7 +67,7 @@ func do(k string, v string, c *cron.Cron) {
 	// 所支持的
 	if supportJob, ok := config.SupportsMap[k]; ok {
 		job := supportJob.(config.Support)
-		job = job.Supports(autoSignConfig)
+		job = job.Supports(yamlConfig)
 		id, err := c.AddJob(v, job)
 		if err == nil {
 			jobs[k] = Jobs{contextId: id, jobName: k, cron: v}

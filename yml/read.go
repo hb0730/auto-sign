@@ -7,10 +7,10 @@ import (
 	"io/ioutil"
 )
 
-//AutoSignConfig 所支持的类型
+//YamlConfig 所支持的类型
 // geekhub,appletuan,ld246,v2ex
 // 读取yml装配
-type AutoSignConfig struct {
+type YamlConfig struct {
 	Geekhub   Geekhub           `yaml:"geekhub"`
 	Appletuan AppleTuan         `yaml:"appletuan"`
 	Ld        Ld                `yaml:"ld246"`
@@ -55,20 +55,20 @@ func (err *ReadError) Error() string {
 }
 
 //Config 用于获取当前的email配置
-var Config AutoSignConfig
+var Config YamlConfig
 
 //RedStruct 读取当前配置，并转成struct
-func RedStruct() (AutoSignConfig, error) {
+func RedStruct() (YamlConfig, error) {
 	content, err := ioutil.ReadFile("config/application.yml")
 	if err != nil {
 		util.ErrorF("read yml file error, %v \n", err)
-		return AutoSignConfig{}, &ReadError{Errors: []string{"读取yaml文件失败失败:message", err.Error()}}
+		return YamlConfig{}, &ReadError{Errors: []string{"读取yaml文件失败失败:message", err.Error()}}
 	}
-	var autoSign AutoSignConfig
+	var autoSign YamlConfig
 	err = yaml.Unmarshal(content, &autoSign)
 	if err != nil {
 		util.ErrorF("read yml file error, %v \n", err)
-		return AutoSignConfig{}, &ReadError{Errors: []string{"格式转换错误:message", err.Error()}}
+		return YamlConfig{}, &ReadError{Errors: []string{"格式转换错误:message", err.Error()}}
 	}
 	Config = autoSign
 	return autoSign, nil

@@ -3,7 +3,7 @@ package config
 import "auto-sign/ld246"
 
 type Ld struct {
-	AutoSign
+	AbstractSupport
 	User map[string]string `yaml:"user,omitempty"`
 }
 
@@ -21,7 +21,9 @@ func (ld Ld) DoVoid() {
 	ld.Do(ld.User)
 }
 
-func (ld Ld) Supports(config AutoSignConfig) Support {
+func (ld Ld) Supports(config YamlConfig) Support {
+	// 这里的设置主要解决 *AbstractSupport.Run时nil问题
+	// 故儿需要将其重新设置
 	c := config.Ld
 	c.Sub = c
 	c.SubName = "ld246"

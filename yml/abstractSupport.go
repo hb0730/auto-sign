@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-//AutoSign 主要是做一个Abstract类，用于切面
-type AutoSign struct {
+//AbstractSupport 主要是做一个Abstract类，用于切面
+type AbstractSupport struct {
 	Support
 	// Sub 用于*Support.Run()调用,防止丢失当前类
 	//
@@ -18,7 +18,7 @@ type AutoSign struct {
 	SubName string
 }
 
-func (support AutoSign) Run() {
+func (support AbstractSupport) Run() {
 	defer func() {
 		if r := recover(); r != nil {
 			util.ErrorF("run error %v \n", r)
