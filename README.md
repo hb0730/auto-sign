@@ -13,6 +13,19 @@ geekhub.Do()
 
 只需要Cookie中的`_session_id`
 
+## appletuan 
+代码实现[appletuan](https://appletuan.com)的签到
+首先需要一个原始的`session_id`
+```go
+cookie := make(map[string]string, 1)
+cookie["_session_id"] = ""
+tuan := AppleTuan{Cookies: cookie}
+tuan.Do()
+```
+
+只需要Cookie中的`_session_id`
+
+
 ## ld246
 代码实现 [ld](https://ld246.com) 的签到(自动签到)
 ```go
