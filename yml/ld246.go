@@ -20,12 +20,7 @@ func (ld Ld) Do(config interface{}) {
 func (ld Ld) DoVoid() {
 	ld.Do(ld.User)
 }
-func (ld Ld) GetConfig(config AutoSignConfig, typeInt int) interface{} {
-	if typeInt == LD246 {
-		return config.Ld
-	}
-	return nil
-}
+
 func (ld Ld) Supports(config AutoSignConfig) Support {
 	c := config.Ld
 	c.Sub = c

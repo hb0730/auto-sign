@@ -14,11 +14,7 @@ type Jobs struct {
 }
 
 var jobs = make(map[string]Jobs)
-var supportJobs = map[string]interface{}{
-	"geekhub": config.Geekhub{},
-	"ld246":   config.Ld{},
-	"v2ex":    config.V2ex{},
-}
+
 var autoSignConfig config.AutoSignConfig
 
 func main() {
@@ -69,7 +65,7 @@ func main() {
 // c 为*cron.Cron 定时任务
 func do(k string, v string, c *cron.Cron) {
 	// 所支持的
-	if supportJob, ok := supportJobs[k]; ok {
+	if supportJob, ok := config.SupportsMap[k]; ok {
 		job := supportJob.(config.Support)
 		job = job.Supports(autoSignConfig)
 		id, err := c.AddJob(v, job)

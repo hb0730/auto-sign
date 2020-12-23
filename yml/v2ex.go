@@ -22,12 +22,6 @@ func (v2 V2ex) DoVoid() {
 	v2.Do(v2.Cookies)
 }
 
-func (v2 V2ex) GetConfig(config AutoSignConfig, typeInt int) interface{} {
-	if typeInt == V2EX {
-		return config.V2ex
-	}
-	return nil
-}
 func (v2 V2ex) Supports(config AutoSignConfig) Support {
 	c := config.V2ex
 	c.Sub = c

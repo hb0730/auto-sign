@@ -13,12 +13,6 @@ func (Geekhub) Supports(config AutoSignConfig) Support {
 	g.SubName = "geekhub"
 	return g
 }
-func (g Geekhub) GetConfig(config AutoSignConfig, typeInt int) interface{} {
-	if typeInt == GEEKHUB {
-		return config.Geekhub
-	}
-	return nil
-}
 
 //func (g Geekhub) Run() {
 //	g.Do(g.Cookies)

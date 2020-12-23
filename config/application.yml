@@ -1,6 +1,9 @@
 geekhub:
   cookies:
     _session_id:
+appletuan:
+  cookies:
+    _session_id:
 ld246:
   user:
     userName:
@@ -11,6 +14,7 @@ v2ex:
     A2:
 cron:
   geekhub: "5 0 * * *"
+  appletuan: "10 0 * * *"
   ld246: "3 0 * * *"
   v2ex: "5 8 * * *"
 
