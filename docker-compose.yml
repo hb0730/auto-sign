@@ -4,7 +4,7 @@ services:
     restart: always
     image: auto-sign:latest
     environment:
-      - TZ= 'Asia/Shanghai'
+      - TZ=Asia/Shanghai
     container_name: auto-sign
     volumes:
       - ./config:/app/config/

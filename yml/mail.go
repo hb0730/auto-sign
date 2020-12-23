@@ -12,12 +12,12 @@ type Mail struct {
 	To       string `yaml:"to"`
 }
 
-func (mail Mail) Send(subject string, content string, to string) error {
+func (mail Mail) Send(subject string, content string) error {
 	m := convert(mail)
 	if m.Password == "" || m.Username == "" {
 		return nil
 	}
-	return m.Send(subject, content, to)
+	return m.Send(subject, content, mail.To)
 }
 func (mail Mail) SendToArray(subject string, content string, to ...string) error {
 	m := convert(mail)

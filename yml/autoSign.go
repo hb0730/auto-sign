@@ -29,7 +29,7 @@ func (support AutoSign) Run() {
 				c = t.Error()
 			}
 			content := fmt.Sprintf("auto-sign在执行cron时出错，具体详情\n: %v\n", c)
-			mail.Send(subject, content, mail.To)
+			mail.Send(subject, content)
 			panic(r)
 		}
 	}()
