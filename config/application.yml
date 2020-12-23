@@ -10,9 +10,9 @@ v2ex:
     PB3_SESSION:
     A2:
 cron:
-  geekhub: "0 0 * * *"
-  ld246: "0 0 * * *"
-  v2ex: "0 8 * * *"
+  geekhub: "5 0 * * *"
+  ld246: "3 0 * * *"
+  v2ex: "5 8 * * *"
 
 email:
   host:

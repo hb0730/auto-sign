@@ -3,7 +3,7 @@ package send
 import (
 	"auto-sign/util"
 	"fmt"
-	mail "github.com/xhit/go-simple-mail/v2"
+	"github.com/xhit/go-simple-mail/v2"
 	"sync"
 )
 
