@@ -17,8 +17,7 @@ cron:
   appletuan: "10 0 * * *"
   ld246: "3 0 * * *"
   v2ex: "5 8 * * *"
-
-email:
+mail:
   host:
   protocol:
   port:
