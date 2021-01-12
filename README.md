@@ -50,9 +50,6 @@ v2.Do()
 * [cron](https://github.com/robfig/cron) 定时任务
 * [mail](https://github.com/xhit/go-simple-mail) email发送
 
-# cron 定时任务
-可以使用 [gocron](https://github.com/go-co-op/gocron) 来做定时任务
-
 # Docker 
 [hb0730/auto-sign](https://hub.docker.com/r/hb0730/auto-sign)
 
