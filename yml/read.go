@@ -2,6 +2,10 @@ package config
 
 import (
 	"auto-sign/util"
+	"auto-sign/yml/appletuan"
+	"auto-sign/yml/geekhub"
+	"auto-sign/yml/ld246"
+	"auto-sign/yml/v2ex"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -11,21 +15,21 @@ import (
 // geekhub,appletuan,ld246,v2ex
 // 读取yml装配
 type YamlConfig struct {
-	Geekhub   Geekhub           `yaml:"geekhub"`
-	Appletuan AppleTuan         `yaml:"appletuan"`
-	Ld        Ld                `yaml:"ld246"`
-	V2ex      V2ex              `yaml:"v2ex"`
-	Cron      map[string]string `yaml:"cron"`
-	Mail      Mail              `yaml:"mail"`
+	Geekhub   geekhub.Geekhub     `yaml:"geekhub"`
+	Appletuan appletuan.AppleTuan `yaml:"appletuan"`
+	Ld        ld246.Ld            `yaml:"ld246"`
+	V2ex      v2ex.V2ex           `yaml:"v2ex"`
+	Cron      map[string]string   `yaml:"cron"`
+	Mail      Mail                `yaml:"mail"`
 }
 
 //SupportsMap 当前支持的类型
 // key 对应yaml的cron key
 var SupportsMap = map[string]interface{}{
-	"geekhub":   Geekhub{},
-	"appletuan": AppleTuan{},
-	"ld246":     Ld{},
-	"v2ex":      V2ex{},
+	"geekhub":   geekhub.Geekhub{},
+	"appletuan": appletuan.AppleTuan{},
+	"ld246":     ld246.Ld{},
+	"v2ex":      v2ex.V2ex{},
 }
 
 //Read 读取配置文件

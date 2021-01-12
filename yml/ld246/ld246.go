@@ -1,9 +1,12 @@
-package config
+package ld246
 
-import "auto-sign/ld246"
+import (
+	"auto-sign/ld246"
+	"auto-sign/yml"
+)
 
 type Ld struct {
-	AbstractSupport
+	config.AbstractSupport
 	User map[string]string `yaml:"user,omitempty"`
 }
 
@@ -21,7 +24,7 @@ func (ld Ld) DoVoid() {
 	ld.Do(ld.User)
 }
 
-func (ld Ld) Supports(config YamlConfig) Support {
+func (ld Ld) Supports(config config.YamlConfig) config.Support {
 	// 这里的设置主要解决 *AbstractSupport.Run时nil问题
 	// 故儿需要将其重新设置
 	c := config.Ld

@@ -1,13 +1,16 @@
-package config
+package geekhub
 
-import "auto-sign/geekhub"
+import (
+	"auto-sign/geekhub"
+	"auto-sign/yml"
+)
 
 type Geekhub struct {
-	AbstractSupport
+	config.AbstractSupport
 	Cookies map[string]string `yaml:"cookies,omitempty"`
 }
 
-func (Geekhub) Supports(config YamlConfig) Support {
+func (Geekhub) Supports(config config.YamlConfig) config.Support {
 	// 这里的设置主要解决 *AbstractSupport.Run时nil问题
 	// 故儿需要将其重新设置
 	g := config.Geekhub
