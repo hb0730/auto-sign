@@ -17,9 +17,9 @@ geekhub.Do()
 代码实现[appletuan](https://appletuan.com)的签到
 首先需要一个原始的`session_id`
 ```go
-cookie := make(map[string]string, 1)
-cookie["_session_id"] = ""
-tuan := AppleTuan{Cookies: cookie}
+tuan := AppleTuan{Cookies: map[string]string{
+"_session_id": "",
+}}
 tuan.Do()
 ```
 
@@ -27,7 +27,7 @@ tuan.Do()
 
 
 ## ld246
-代码实现 [ld](https://ld246.com) 的签到(自动签到)
+代码实现 [ld](https://ld246.com) 的签到
 ```go
 ld := LD{Username: "", Password: ""}
 ld.Do()
@@ -36,7 +36,9 @@ ld.Do()
 代码实现 [V2ex](https://V2ex.com) 的签到()
 ```go
 params := make(map[string]string, 2)
-v2 := V2ex{cookies: params}
+params["PB3_SESSION"] = ""
+params["A2"] = ""
+v2 := V2ex{Cookies: params}
 v2.Do()
 ```
 
