@@ -75,7 +75,8 @@ func (*LD) Checkin(cookies util.Cookies) {
 	page.MustNavigate(CHECKIN).MustWaitLoad()
 	page.Race().ElementR(`div.module__body > a.btn`, `领取今日签到奖励`).MustHandle(func(e *rod.Element) {
 		e.MustClick()
-		html := e.MustElement(`div.module__body > a.btn`).MustWaitLoad().MustText()
+		page.MustNavigate(CHECKIN).MustWaitLoad()
+		html := page.MustElement("a.btn").MustWaitLoad().MustText()
 		util.Info(fmt.Sprintf("签到成功,%s \n", html))
 	}).Element(`a.btn`).MustHandle(func(e *rod.Element) {
 		html := e.MustText()
