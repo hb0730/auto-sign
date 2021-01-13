@@ -13,5 +13,8 @@ FROM rodorg/rod AS final
 WORKDIR /app
 COPY --from=builder /build/auto-sign /app/
 COPY ./config /app/config
+RUN apk --no-cache add tzdata  && \
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone
 
 ENTRYPOINT ["/app/auto-sign"]
