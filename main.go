@@ -23,13 +23,14 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	c := cron.New()
-	_, err := c.AddFunc("* * * * *", func() {
+	_, err := c.AddFunc("30 * * * *", func() {
 		support, err := cron2.Read()
 		if err != nil {
 			util.ErrorF("%v\n", err)
 			c.Stop()
 			wg.Done()
 		}
+		util.InfoF("%v \n", support)
 		// 判断是否已有表达式
 		if len(support.Cron) <= 0 {
 			return
