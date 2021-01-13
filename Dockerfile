@@ -14,8 +14,5 @@ ENV TZ=Asia/Shanghai
 WORKDIR /app
 COPY --from=builder /build/auto-sign /app/
 COPY ./config /app/config
-RUN apk --no-cache add tzdata zeromq \
-    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
-    && echo '$TZ' > /etc/timezone
 
 ENTRYPOINT ["/app/auto-sign"]
