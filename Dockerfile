@@ -13,8 +13,7 @@ FROM rodorg/rod AS final
 WORKDIR /app
 COPY --from=builder /build/auto-sign /app/
 COPY ./config /app/config
-RUN echo "http://mirrors.aliyun.com/alpine/v3.4/main/" > /etc/apk/repositories \
-    && apk --no-cache add tzdata zeromq \
+RUN apk --no-cache add tzdata zeromq \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo '$TZ' > /etc/timezone
 
