@@ -1,42 +1,41 @@
 package main
 
 import (
+	"auto-sign/support/aggregate"
+	cron2 "auto-sign/support/cron"
 	"auto-sign/util"
-	config "auto-sign/yml"
 	"github.com/robfig/cron/v3"
 	"sync"
 )
 
+//Jobs 用户记录运行的job
 type Jobs struct {
 	contextId cron.EntryID
 	jobName   string
 	cron      string
 }
 
+//jobs 记录添加的Job key为支持的类型
 var jobs = make(map[string]Jobs)
 
-var yamlConfig config.YamlConfig
-
 func main() {
-	util.Info("start ..............")
+	util.Info("start ......")
 	var wg sync.WaitGroup
 	wg.Add(1)
 	c := cron.New()
-	_, err := c.AddFunc("30 * * * *", func() {
-		var err error
-		yamlConfig, err = config.RedStruct()
-		util.InfoF("%v \n", yamlConfig)
+	_, err := c.AddFunc("* * * * *", func() {
+		support, err := cron2.Read()
 		if err != nil {
 			util.ErrorF("%v\n", err)
 			c.Stop()
 			wg.Done()
 		}
-		expressionMap := yamlConfig.Cron
-		if len(expressionMap) == 0 {
+		// 判断是否已有表达式
+		if len(support.Cron) <= 0 {
 			return
 		}
-		// 循环表达式
-		for k, v := range expressionMap {
+
+		for k, v := range support.Cron {
 			job, ok := jobs[k]
 			//新添加的
 			if !ok {
@@ -60,17 +59,21 @@ func main() {
 	wg.Wait()
 }
 
-// k 为yaml corn key
-// v 为yaml corn value
+// do 具体执行的操作
+// supportName 为yaml corn key
+// cornValue 为yaml corn value
 // c 为*cron.Cron 定时任务
-func do(k string, v string, c *cron.Cron) {
-	// 所支持的
-	if supportJob, ok := config.SupportsMap[k]; ok {
-		job := supportJob.(config.Support)
-		job = job.Supports(yamlConfig)
-		id, err := c.AddJob(v, job)
+func do(supportName string, cornValue string, c *cron.Cron) {
+	supportType := aggregate.GetSupports(supportName)
+	if supportType == -1 {
+		return
+	}
+	supportJob := aggregate.NewInstance(supportType)
+	job, err := supportJob.Read()
+	if err == nil {
+		id, err := c.AddJob(cornValue, job)
 		if err == nil {
-			jobs[k] = Jobs{contextId: id, jobName: k, cron: v}
+			jobs[supportName] = Jobs{contextId: id, jobName: supportName, cron: cornValue}
 		}
 	}
 }
