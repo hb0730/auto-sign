@@ -47,7 +47,7 @@ v2.Do()
 # 依赖
 * [rod](https://github.com/go-rod/rod) 用于checkin
 * [yaml](https://github.com/go-yaml/yaml) ~~解析yaml文件~~
-* [uber/config](go.uber.org/config) 解析yaml
+* [uber/config](https://github.com/uber-go/config) 解析yaml
 * [cron](https://github.com/robfig/cron) 定时任务
 * [mail](https://github.com/xhit/go-simple-mail) email发送
 
