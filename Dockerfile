@@ -10,7 +10,6 @@ RUN go mod download
 RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -a -o . && ls
 
 FROM rodorg/rod AS final
-ENV TZ=Asia/Shanghai
 WORKDIR /app
 COPY --from=builder /build/auto-sign /app/
 COPY ./config /app/config
