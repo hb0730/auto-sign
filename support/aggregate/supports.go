@@ -21,6 +21,7 @@ const (
 var SupportTypes = [...]string{"geekhub", "appletuan", "ld246", "v2ex"}
 
 //GetSupports 获取支持的类型
+// 如果不存在返回-1
 func GetSupports(types string) SupportType {
 	for i, v := range SupportTypes {
 		if v == types {

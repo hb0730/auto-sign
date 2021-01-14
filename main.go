@@ -30,7 +30,7 @@ func main() {
 			c.Stop()
 			wg.Done()
 		}
-		util.InfoF("%v \n", support)
+		util.InfoF("%v\n", support)
 		// 判断是否已有表达式
 		if len(support.Cron) <= 0 {
 			return
@@ -50,7 +50,7 @@ func main() {
 		}
 	})
 	if err != nil {
-		util.ErrorF("%v \n", err)
+		util.ErrorF("%v\n", err)
 		wg.Done()
 	}
 	// 其中任务
