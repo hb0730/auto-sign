@@ -66,7 +66,7 @@ appletuan:
     _session_id:
 ld246:
   user:
-    userName:
+    username:
     password:
 v2ex:
   cookies:
