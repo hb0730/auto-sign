@@ -9,7 +9,11 @@ import (
 
 type Ld246 struct {
 	support.AbstractSupport
-	User map[string]string `json:"user"`
+	User User `json:"user"`
+}
+type User struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func (l Ld246) Read() (support.ISuperJob, error) {
@@ -25,7 +29,7 @@ func (l Ld246) Read() (support.ISuperJob, error) {
 	return result, nil
 }
 func (ld Ld246) DoSupport() {
-	l := ld246.LD{Username: ld.User["username"], Password: ld.User["password"]}
+	l := ld246.LD{Username: ld.User.Username, Password: ld.User.Password}
 	l.Do()
 
 }
