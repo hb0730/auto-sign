@@ -3,7 +3,7 @@ module auto-sign
 go 1.15
 
 require (
-	github.com/go-rod/rod v0.86.0
+	github.com/go-rod/rod v0.91.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/xhit/go-simple-mail/v2 v2.7.0
 	go.uber.org/config v1.4.0
