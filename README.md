@@ -73,6 +73,7 @@ v2ex:
   cookies:
     PB3_SESSION:
     A2:
+    V2EX_LANG:   
 cron:
   geekhub: "5 0 * * *"
   appletuan: "10 0 * * *"
