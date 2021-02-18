@@ -38,6 +38,7 @@ ld.Do()
 params := make(map[string]string, 2)
 params["PB3_SESSION"] = ""
 params["A2"] = ""
+params["V2EX_LANG"]=""
 v2 := V2ex{Cookies: params}
 v2.Do()
 ```
