@@ -86,6 +86,6 @@ mail:
   port: 465
   username: "xxxx@qq.com"
   password: "xxxx"
-  fromName: "auto-sign"
+  from_name: "auto-sign"
   to: "xxxx@xx.com"
 ```
