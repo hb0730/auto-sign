@@ -8,14 +8,14 @@ import (
 )
 
 type Mail struct {
-	Enabled  bool   `json:"enabled"`
-	Host     string `json:"host"`
-	Protocol string `json:"protocol"`
-	Port     int    `json:"port"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	FromName string `json:"fromName"`
-	To       string `json:"to"`
+	Enabled  bool   `json:"enabled" yaml:"enabled"`
+	Host     string `json:"host" yaml:"host"`
+	Protocol string `json:"protocol" yaml:"protocol"`
+	Port     int    `json:"port" yaml:"port"`
+	Username string `json:"username" yaml:"username"`
+	Password string `json:"password" yaml:"password"`
+	FromName string `json:"from_name" yaml:"from_name"`
+	To       string `json:"to" yaml:"to"`
 }
 
 //Read 读取配置

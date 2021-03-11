@@ -2,11 +2,13 @@ package ld246
 
 import (
 	"auto-sign/browser"
+	error2 "auto-sign/error"
 	"auto-sign/util"
 	"encoding/json"
 	"fmt"
 	"github.com/go-rod/rod"
 	"net/http"
+	"time"
 )
 
 const LOGIN = "https://ld246.com/api/v2/login"
@@ -24,22 +26,28 @@ type LD struct {
 	Password string
 }
 
-//
-func (ld *LD) Do() {
+var cookies util.Cookies
+
+func (ld *LD) Do() error {
 	util.Info("ld246 checkin .....")
 
 	if ld.Username == "" {
 		util.Warn("username is null")
-		return
+		return &error2.AutoSignError{Module: "ld246", Message: "username is null"}
 	}
 	if ld.Password == "" {
 		util.Warn("password is null")
-		return
+		return &error2.AutoSignError{Module: "ld246", Message: "password is null"}
 	}
 	r := ld.Login()
-	cookies := setCookie(r.Token)
-	ld.Checkin(cookies)
+	cookies = setCookie(r.Token)
+	if len(cookies) == 0 {
+		util.Warn("token is null")
+		return &error2.AutoSignError{Module: "ld246", Message: "token is null"}
+	}
+	ld.RodPage()
 	ld.Logout(cookies)
+	return nil
 }
 
 func (ld *LD) Login() LoginResult {
@@ -63,17 +71,17 @@ func (ld *LD) Login() LoginResult {
 	util.Warn("login failed")
 	return result
 }
-func (*LD) Checkin(cookies util.Cookies) {
-	if len(cookies) == 0 {
-		util.Warn("token is null")
-		return
-	}
+func (ld *LD) RodPage() {
 	b := browser.NewBrowser(true)
 	defer b.MustClose()
 	page := b.MustSetCookies(util.ConvertCookies(cookies, ".ld246.com")).MustPage("")
 	page.MustSetExtraHeaders(convertHeader()...)
 	page.MustNavigate(CHECKIN).MustWaitLoad()
-	page.Race().ElementR(`div.module__body > a.btn`, `领取今日签到奖励`).MustHandle(func(e *rod.Element) {
+	util.Retry(page, ld, 3)
+}
+
+func (ld *LD) Checking(page *rod.Page) {
+	page.Timeout(30*time.Second).Race().ElementR(`div.module__body > a.btn`, `领取今日签到奖励`).MustHandle(func(e *rod.Element) {
 		_ = e.MustClick().WaitLoad()
 		page.MustNavigate(CHECKIN).MustWaitLoad()
 		html := page.MustElement("a.btn").MustWaitLoad().MustText()

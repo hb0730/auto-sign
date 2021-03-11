@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/go-rod/rod"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -14,7 +15,12 @@ type Request struct {
 type Cookies map[string]string
 
 type AutoSign interface {
-	Do()
+	//开始
+	Do() error
+	//创建page
+	RodPage()
+	//正在签到
+	Checking(page *rod.Page)
 }
 
 func (rq *Request) CreateRequest() *http.Request {
