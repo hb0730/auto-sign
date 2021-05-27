@@ -16,6 +16,7 @@ func init() {
 	utils.Info("appleTuan 开始注册 ....")
 	tuan := AppleTuan{}
 	tuan.ISupport = tuan
+	tuan.Name = "apple团"
 	Register("appletuan", tuan)
 }
 

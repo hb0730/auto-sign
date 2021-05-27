@@ -15,6 +15,7 @@ type Ld246 struct {
 func init() {
 	utils.Info("ld246 开始注册 ....")
 	ld := Ld246{}
+	ld.Name = "ld246"
 	ld.ISupport = ld
 	Register("ld246", ld)
 }

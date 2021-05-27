@@ -3,6 +3,7 @@ cron:
   appletuan: "40 7 * * *"
   ld246: "5 0 * * *"
   v2ex: "0 8 * * *"
+  famijia: "10 8 * * *"
 geekhub:
   cookies:
     _session_id:
@@ -17,6 +18,11 @@ v2ex:
   cookies:
     A2:
     PB3_SESSION:
+famijia:
+  headers:
+    token:
+    black_box:
+    device_id:
 message:
   type: bark
   bark:

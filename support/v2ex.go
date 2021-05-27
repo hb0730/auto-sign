@@ -16,6 +16,7 @@ type V2ex struct {
 func init() {
 	utils.Info("v2ex 开始注册 ....")
 	v := V2ex{}
+	v.Name = "v2ex"
 	v.ISupport = v
 	Register("v2ex", v)
 }

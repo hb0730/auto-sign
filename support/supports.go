@@ -18,6 +18,7 @@ type ISupport interface {
 //Support 支持的类型
 // 承上启下作用
 type Support struct {
+	Name string
 	// AutoRun Cron调用
 	AutoRun
 	// ISupport 后置
@@ -36,6 +37,8 @@ func (s Support) Run() {
 	if err != nil {
 		utils.Error(err.Error())
 		sendMessageError(err)
+	} else {
+		sendSuccess(s.Name)
 	}
 }
 
@@ -65,12 +68,26 @@ func retry(a Support, num int) {
 
 // sendMessageError 发送错误信息
 func sendMessageError(err error) {
+	var body = message.MessageBody{}
+	body.Title = "签到失败"
+	body.Content = err.Error()
+	send(body)
+}
+
+// sendSuccess 签到成功
+func sendSuccess(name string) {
+	body := message.MessageBody{
+		Title:   "签到成功",
+		Content: name + ",签到成功",
+	}
+	send(body)
+}
+
+// send 发送
+func send(body message.MessageBody) {
 	m := message.GetSupport()
 	if m == nil {
 		return
 	}
-	var body = message.MessageBody{}
-	body.Title = "签到失败"
-	body.Content = err.Error()
 	m.Send(body)
 }

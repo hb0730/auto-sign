@@ -17,6 +17,7 @@ var hub = application.GeekHub{}
 func init() {
 	utils.Info("geekhub 注册 ....")
 	hub := Geekhub{}
+	hub.Name = "geekhub"
 	hub.ISupport = hub
 	Register("geekhub", hub)
 }
