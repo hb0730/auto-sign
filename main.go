@@ -35,7 +35,7 @@ func main() {
 	wg.Add(1)
 	c := cron.New()
 	//每30分钟读取配置文件
-	_, err := c.AddFunc("* * * * *", func() {
+	_, err := c.AddFunc("30 * * * *", func() {
 		readCron, e := ReadCron()
 		//如果读取异常，则关闭守护
 		if e != nil {
