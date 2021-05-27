@@ -3,7 +3,7 @@ package utils
 import (
 	"compress/gzip"
 	"io"
-	ioutil "io/ioutil"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )

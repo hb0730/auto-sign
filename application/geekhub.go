@@ -29,7 +29,7 @@ func (g GeekHub) Start() error {
 }
 
 func (g GeekHub) doStart() error {
-	b := utils.CreateBrowser(false)
+	b := utils.CreateBrowser(true)
 	defer b.MustClose()
 	page := b.MustSetCookies(utils.ConvertRodCookies(g.Cookies, "www.geekhub.com")...).
 		MustPage("https://www.geekhub.com/checkins").

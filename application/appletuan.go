@@ -28,7 +28,7 @@ func (t AppleTuan) Start() error {
 }
 
 func (t AppleTuan) doStart() error {
-	b := utils.CreateBrowser(false)
+	b := utils.CreateBrowser(true)
 	defer b.MustClose()
 	page := b.MustSetCookies(utils.ConvertRodCookies(t.Cookies, "appletuan.com")...).
 		MustPage("https://appletuan.com/checkins").

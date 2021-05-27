@@ -1,12 +1,22 @@
 cron:
-  geekhub: "* * * * *"
+  geekhub: "0 7 * * *"
   appletuan: "40 7 * * *"
   ld246: "5 0 * * *"
   v2ex: "0 8 * * *"
 geekhub:
   cookies:
     _session_id:
-
+appletuan:
+  cookies:
+    _session_id:
+ld246:
+  user:
+    username:
+    password:
+v2ex:
+  cookies:
+    A2:
+    PB3_SESSION:
 message:
   type: bark
   bark:

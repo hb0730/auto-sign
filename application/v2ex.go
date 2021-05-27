@@ -28,13 +28,14 @@ func (v V2ex) Start() error {
 }
 
 func (v V2ex) doStart() error {
-	b := utils.CreateBrowser(false)
+	b := utils.CreateBrowser(true)
 	defer b.MustClose()
-	page := b.MustSetCookies(utils.ConvertRodCookies(v.Cookies, "www.v2ex.com")...).
-		MustPage("https://www.v2ex.com").
-		MustWaitLoad()
-
+	// 来自https://github.com/go-rod/v2ex-example
+	page := b.MustSetCookies(utils.ConvertRodCookies(v.Cookies, ".v2ex.com")...).MustPage("")
 	defer page.MustClose()
+	page.MustSetExtraHeaders("accept-language", "zh-CN,zh;q=0.9")
+	page.MustNavigate("https://www.v2ex.com/").MustWaitLoad()
+
 	page.Timeout(30*time.Second).
 		Race().
 		ElementR("a", "领取今日的登录奖励").

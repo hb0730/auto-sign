@@ -22,7 +22,7 @@ type Mail struct {
 var mail Mail
 
 func init() {
-	utils.Info("read mail config ...")
+	utils.Info("mail start ...")
 	yaml := config.ReadYaml()
 	mailMap := yaml.GetStringMap("message.mail")
 	bt, _ := json.Marshal(mailMap)

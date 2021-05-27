@@ -109,7 +109,7 @@ func (ld Ld246) Login() LoginResult {
 
 // Sign 签到
 func (ld Ld246) Sign(cookies utils.Cookies) {
-	b := utils.CreateBrowser(false)
+	b := utils.CreateBrowser(true)
 	defer b.MustClose()
 	page := b.MustSetCookies(utils.ConvertRodCookies(cookies, ".ld246.com")...).
 		MustPage("")
