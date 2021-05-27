@@ -1,9 +1,9 @@
 package main
 
 import (
-	"auto-sign/support/aggregate"
-	cron2 "auto-sign/support/cron"
-	"auto-sign/util"
+	"github.com/hb0730/auto-sign/config"
+	"github.com/hb0730/auto-sign/support"
+	"github.com/hb0730/auto-sign/utils"
 	"github.com/robfig/cron/v3"
 	"sync"
 )
@@ -15,66 +15,77 @@ type Jobs struct {
 	cron      string
 }
 
-//jobs 记录添加的Job key为支持的类型
 var jobs = make(map[string]Jobs)
 
+//ReadCron 读取cron表达式
+func ReadCron() (Cron, error) {
+	v, e := config.ReadYaml()
+	if e != nil {
+		return Cron{}, e
+	}
+	r := v.GetStringMapString("cron")
+	return Cron{Cron: r}, nil
+}
+
+//Cron Cron struct
+type Cron struct {
+	Cron map[string]string
+}
+
 func main() {
-	util.Info("start ......")
+	utils.Info("main start ....")
 	var wg sync.WaitGroup
 	wg.Add(1)
 	c := cron.New()
-	_, err := c.AddFunc("30 * * * *", func() {
-		support, err := cron2.Read()
-		if err != nil {
-			util.ErrorF("%v\n", err)
+	//每30分钟读取配置文件
+	_, err := c.AddFunc("* * * * *", func() {
+		readCron, e := ReadCron()
+		//如果读取异常，则关闭守护
+		if e != nil {
+			utils.ErrorF(e.Error())
 			c.Stop()
 			wg.Done()
-		}
-		util.InfoF("%v\n", support)
-		// 判断是否已有表达式
-		if len(support.Cron) <= 0 {
 			return
 		}
-
-		for k, v := range support.Cron {
-			job, ok := jobs[k]
-			//新添加的
-			if !ok {
-				do(k, v, c)
-				// 已存在 ,且cron已修改
-			} else if ok && job.cron != v {
-				job := jobs[k]
-				c.Remove(job.contextId)
-				do(k, v, c)
-			}
+		if len(readCron.Cron) == 0 {
+			return
+		}
+		for k, v := range readCron.Cron {
+			doJob(k, v, c)
 		}
 	})
+
 	if err != nil {
-		util.ErrorF("%v\n", err)
+		utils.ErrorF("%v\n", err)
 		wg.Done()
 	}
 	// 其中任务
 	c.Run()
 	// 关闭任务
 	defer c.Stop()
+
 	wg.Wait()
 }
 
-// do 具体执行的操作
-// supportName 为yaml corn key
-// cornValue 为yaml corn value
-// c 为*cron.Cron 定时任务
-func do(supportName string, cornValue string, c *cron.Cron) {
-	supportType := aggregate.GetSupports(supportName)
-	if supportType == -1 {
+func doJob(name string, value string, c *cron.Cron) {
+	job, ok := jobs[name]
+	//新添加的
+	if !ok {
+		do(name, value, c)
+	} else if ok && job.cron != value {
+		// 已存在 ,且cron已修改
+		c.Remove(job.contextId)
+		do(name, value, c)
+	}
+}
+
+func do(k string, v string, c *cron.Cron) {
+	run, ok := support.Supports[k]
+	if !ok {
 		return
 	}
-	supportJob := aggregate.NewInstance(supportType)
-	job, err := supportJob.Read()
+	id, err := c.AddJob(v, run)
 	if err == nil {
-		id, err := c.AddJob(cornValue, job)
-		if err == nil {
-			jobs[supportName] = Jobs{contextId: id, jobName: supportName, cron: cornValue}
-		}
+		jobs[k] = Jobs{contextId: id, jobName: k, cron: v}
 	}
 }

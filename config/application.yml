@@ -1,28 +1,8 @@
+cron:
+  geekhub: "* * * * *"
+  appletuan: "40 7 * * *"
+  ld246: "5 0 * * *"
+  v2ex: "0 8 * * *"
 geekhub:
   cookies:
-    _session_id: test
-appletuan:
-  cookies:
     _session_id:
-ld246:
-  user:
-    username:
-    password:
-v2ex:
-  cookies:
-    PB3_SESSION:
-    A2:
-cron:
-  geekhub: "5 0 * * *"
-  appletuan: "10 0 * * *"
-  ld246: "3 0 * * *"
-  v2ex: "5 8 * * *"
-mail:
-  enabled: false
-  host:
-  protocol:
-  port:
-  username:
-  password:
-  from_name:
-  to:
