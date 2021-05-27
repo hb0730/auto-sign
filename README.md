@@ -2,53 +2,55 @@
 go 实现签到
 
 ## geekhub 
+
 代码实现 [geekhub](https://geekhub.com) 的签到
-首先需要一个原始的`session_id`
+首先需要一个原始的`_session_id`
+
 ```go
 cookie := make(map[string]string, 1)
 cookie["_session_id"] = ""
 geekhub := Geekhub{Cookies: cookie}
-geekhub.Do()
+geekhub.Start()
 ```
 
-只需要Cookie中的`_session_id`
 
 ## appletuan 
+
 代码实现[appletuan](https://appletuan.com)的签到
-首先需要一个原始的`session_id`
+首先需要一个原始的`_session_id`
+
 ```go
 tuan := AppleTuan{Cookies: map[string]string{
 "_session_id": "",
 }}
-tuan.Do()
+tuan.Start()
 ```
-
-只需要Cookie中的`_session_id`
-
 
 ## ld246
+
 代码实现 [ld](https://ld246.com) 的签到
+
 ```go
 ld := LD{Username: "", Password: ""}
-ld.Do()
+ld.Start()
 ```
 ## V2ex
-代码实现 [V2ex](https://V2ex.com) 的签到()
+
+代码实现 [V2ex](https://V2ex.com) 的签到
+
 ```go
 params := make(map[string]string, 2)
 params["PB3_SESSION"] = ""
 params["A2"] = ""
-params["V2EX_LANG"]=""
 v2 := V2ex{Cookies: params}
-v2.Do()
+v2.Start()
 ```
 
 需要Cookie中的`v2`,`PB3_SESSION`
 
 # 依赖
 * [rod](https://github.com/go-rod/rod) 用于checkin
-* [yaml](https://github.com/go-yaml/yaml) ~~解析yaml文件~~
-* [uber/config](https://github.com/uber-go/config) 解析yaml
+* [yaml/v1](github.com/spf13/viper)  用于读取yaml配置
 * [cron](https://github.com/robfig/cron) 定时任务
 * [mail](https://github.com/xhit/go-simple-mail) email发送
 
@@ -59,6 +61,11 @@ v2.Do()
 
 # demo 
 ```yaml
+cron:
+  geekhub: "0 7 * * *"
+  appletuan: "40 7 * * *"
+  ld246: "5 0 * * *"
+  v2ex: "0 8 * * *"
 geekhub:
   cookies:
     _session_id:
@@ -71,21 +78,23 @@ ld246:
     password:
 v2ex:
   cookies:
-    PB3_SESSION:
     A2:
-    V2EX_LANG:   
-cron:
-  geekhub: "5 0 * * *"
-  appletuan: "10 0 * * *"
-  ld246: "3 0 * * *"
-  v2ex: "5 8 * * *"
-mail:
-  enabled: false
-  host: "smtp.qq.com"
-  protocol: "smtp"
-  port: 465
-  username: "xxxx@qq.com"
-  password: "xxxx"
-  from_name: "auto-sign"
-  to: "xxxx@xx.com"
+    PB3_SESSION:
+message:
+  type: bark
+  bark:
+    url:
+    key:
+  mail:
+    host:
+    protocol:
+    port: 465
+    username:
+    password:
+    from_name:
+    to:
 ```
+
+## **注意**
+
+[yaml/v1](github.com/spf13/viper) 在读取配置时大小写不区分 [issues/1014](https://github.com/spf13/viper/issues/1014)
