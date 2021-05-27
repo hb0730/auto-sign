@@ -24,15 +24,7 @@ func init() {
 // DoRun 开始签到
 func (g Geekhub) DoRun() error {
 	utils.Info("geekhub签到 ....")
-	yaml, err := config.ReadYaml()
-	if err != nil {
-		return &utils.AutoSignError{
-			Module:  "geekhub",
-			Method:  "sign",
-			Message: "读取yaml配置错误",
-			E:       err,
-		}
-	}
+	yaml := config.ReadYaml()
 	cookies := yaml.GetStringMapString("geekhub.cookies")
 	hub.Cookies = cookies
 	return hub.Start()

@@ -21,15 +21,7 @@ func init() {
 
 func (ld Ld246) DoRun() error {
 	utils.Info("ld246 开始签到...")
-	yaml, err := config.ReadYaml()
-	if err != nil {
-		return &utils.AutoSignError{
-			Module:  "ld246",
-			Method:  "sign",
-			Message: "读取yaml配置错误",
-			E:       err,
-		}
-	}
+	yaml := config.ReadYaml()
 	user := yaml.GetStringMapString("ld246.user")
 	ld246.Username = user["username"]
 	ld246.Password = user["password"]

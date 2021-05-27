@@ -6,3 +6,9 @@ cron:
 geekhub:
   cookies:
     _session_id:
+
+message:
+  type: bark
+  bark:
+    url:
+    key:

@@ -21,15 +21,7 @@ func init() {
 
 func (v V2ex) DoRun() error {
 	utils.Info("v2ex 开始签到")
-	yaml, err := config.ReadYaml()
-	if err != nil {
-		return &utils.AutoSignError{
-			Module:  "v2ex",
-			Method:  "sign",
-			Message: "读取yaml配置错误",
-			E:       err,
-		}
-	}
+	yaml := config.ReadYaml()
 	cookies := yaml.GetStringMapString("v2ex.cookies")
 	v2ex.Cookies = cookies
 	return v2ex.Start()

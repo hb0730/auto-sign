@@ -2,6 +2,7 @@ package support
 
 import (
 	"github.com/go-rod/rod"
+	"github.com/hb0730/auto-sign/message"
 	"github.com/hb0730/auto-sign/utils"
 	"time"
 )
@@ -34,6 +35,7 @@ func (s Support) Run() {
 	})
 	if err != nil {
 		utils.Error(err.Error())
+		sendMessageError(err)
 	}
 }
 
@@ -59,4 +61,16 @@ func retry(a Support, num int) {
 	} else if err != nil {
 		panic(err)
 	}
+}
+
+// sendMessageError 发送错误信息
+func sendMessageError(err error) {
+	m := message.GetSupport()
+	if m == nil {
+		return
+	}
+	var body = message.MessageBody{}
+	body.Title = "签到失败"
+	body.Content = err.Error()
+	m.Send(body)
 }

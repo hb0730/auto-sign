@@ -21,15 +21,7 @@ func init() {
 
 func (tuan AppleTuan) DoRun() error {
 	utils.Info("appletuan 开始签到")
-	yaml, err := config.ReadYaml()
-	if err != nil {
-		return &utils.AutoSignError{
-			Module:  "appletuan",
-			Method:  "sign",
-			Message: "读取yaml配置错误",
-			E:       err,
-		}
-	}
+	yaml := config.ReadYaml()
 	cookies := yaml.GetStringMapString("appletuan.cookies")
 
 	apple.Cookies = cookies

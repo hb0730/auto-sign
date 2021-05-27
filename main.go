@@ -19,10 +19,7 @@ var jobs = make(map[string]Jobs)
 
 //ReadCron 读取cron表达式
 func ReadCron() (Cron, error) {
-	v, e := config.ReadYaml()
-	if e != nil {
-		return Cron{}, e
-	}
+	v := config.ReadYaml()
 	r := v.GetStringMapString("cron")
 	return Cron{Cron: r}, nil
 }

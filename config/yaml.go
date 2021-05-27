@@ -8,7 +8,14 @@ import (
 	"path/filepath"
 )
 
-func ReadYaml() (*viper.Viper, error) {
+var Viper *viper.Viper
+
+func ReadYaml() *viper.Viper {
+	return Viper
+}
+
+func initViper() {
+	utils.Info("read yaml file init ...")
 	utils.Info("read yaml file")
 	workPath, _ := os.Executable()
 	filePath := path.Dir(workPath)
@@ -16,14 +23,20 @@ func ReadYaml() (*viper.Viper, error) {
 	viper.SetConfigName("application")
 	viper.SetConfigType("yml")
 	viper.AddConfigPath("./config")
+	viper.AddConfigPath("../config")
 	viper.AddConfigPath(filePath)
-	if err := viper.ReadInConfig(); err != nil {
-		utils.ErrorF("read support file error, %v \n", err)
-		return nil, &utils.AutoSignError{
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(&utils.AutoSignError{
 			Module: "yaml",
 			Method: "read yaml",
 			E:      err,
-		}
+		})
 	}
-	return viper.GetViper(), nil
+
+	Viper = viper.GetViper()
+}
+
+func init() {
+	initViper()
 }
