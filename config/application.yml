@@ -12,3 +12,11 @@ message:
   bark:
     url:
     key:
+  mail:
+    host:
+    protocol:
+    port: 465
+    username:
+    password:
+    from_name:
+    to:
