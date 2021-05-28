@@ -8,7 +8,7 @@ jobs:
       auto-sign: ${{steps.set-version.outputs.auto-sign}}
     strategy:
       matrix:
-        go_version: [ 1.15 ]
+        go_version: [ 1.16.4 ]
         os: [ ubuntu-latest ]
     steps:
       - name: Set up Go ${{matrix.go_version}}

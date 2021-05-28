@@ -1,6 +1,6 @@
 module github.com/hb0730/auto-sign
 
-go 1.15
+go 1.16
 
 require (
 	github.com/go-rod/rod v0.99.0

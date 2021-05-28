@@ -48,6 +48,33 @@ v2.Start()
 
 需要Cookie中的`v2`,`PB3_SESSION`
 
+# Message 消息推送
+
+消息推送支持 [mail](https://github.com/xhit/go-simple-mail) 与 [bark](https://github.com/Finb/Bark) ios 推送
+
+## mail 推送
+
+需要内容
+
+```
+host: 地址
+protocol: 协议
+port: 465 端口
+username: 用户名
+password: 密码
+from_name: 类似昵称
+to: 发送地址
+```
+
+## bark
+
+需要内容
+
+```
+url: 地址
+key: 密钥
+```
+
 # 依赖
 * [rod](https://github.com/go-rod/rod) 用于checkin
 * [yaml/v1](github.com/spf13/viper)  用于读取yaml配置
