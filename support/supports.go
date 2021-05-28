@@ -3,7 +3,7 @@ package support
 import (
 	"github.com/go-rod/rod"
 	"github.com/hb0730/auto-sign/message"
-	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 	"time"
 )
 
@@ -30,12 +30,12 @@ type Support struct {
 
 // Run Cron执行
 func (s Support) Run() {
-	utils.Info("cron 开始执行")
+	logger.Info("cron 开始执行")
 	err := rod.Try(func() {
 		retry(s, 3)
 	})
 	if err != nil {
-		utils.Error(err.Error())
+		logger.Error(err.Error())
 		sendMessageError(err)
 	} else {
 		sendSuccess(s.Name)

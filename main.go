@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/hb0730/auto-sign/utils"
 	"github.com/hb0730/auto-sign/web"
+	"github.com/mritd/logger"
 	"github.com/urfave/cli/v2"
 	"os"
 	"os/signal"
@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	utils.Info("[main] start ....")
+	logger.Info("[main] start ....")
 	app := &cli.App{
 		Name:  "auto-sign server",
 		Usage: "auto sign ",
@@ -50,18 +50,18 @@ func main() {
 			go func() {
 				err := StartCron()
 				if err != nil {
-					utils.Warn("Cron start error ,Http Server shutdown")
+					logger.Warn("[main] Cron start error ,Http Server shutdown")
 					if err := app.Shutdown(); err != nil {
-						utils.ErrorF("Server forced to shutdown error: %v", err)
+						logger.Errorf("[main] Server forced to shutdown error: %v", err)
 					}
 				}
 
 				sigs := make(chan os.Signal)
 				signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 				for range sigs {
-					utils.Warn("Received a termination signal, bark server shutdown...")
+					logger.Warn("[main] Received a termination signal, bark server shutdown...")
 					if err := app.Shutdown(); err != nil {
-						utils.ErrorF("Server forced to shutdown error: %v", err)
+						logger.Errorf("[main] Server forced to shutdown error: %v", err)
 					}
 				}
 			}()
@@ -70,7 +70,7 @@ func main() {
 	}
 	err := app.Run(os.Args)
 	if err != nil {
-		utils.ErrorF("[main] start error,error message:【 %s 】", err.Error())
+		logger.Errorf("[main] start error,error message:【 %s 】", err.Error())
 		os.Exit(-1)
 	}
 }

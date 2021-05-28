@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/go-rod/rod"
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 	"time"
 )
 
@@ -15,9 +16,9 @@ type AppleTuan struct {
 
 //Start 开始
 func (t AppleTuan) Start() error {
-	utils.Info("AppleTuan checkins ....")
+	logger.Info("[AppleTuan] checkins ....")
 	if len(t.Cookies) <= 0 {
-		utils.Warn("Cookies is null")
+		logger.Warn("[AppleTuan] Cookies is null")
 		return &utils.AutoSignError{
 			Module:  "appletuan",
 			Method:  "apple tuan sign",
@@ -40,9 +41,9 @@ func (t AppleTuan) doStart() error {
 		MustHandle(func(e *rod.Element) {
 			e.MustClick()
 			page.MustElementR("span", `今日已签到`)
-			utils.Info("AppleTuan 今日签到成功")
+			logger.Info("[AppleTuan] 今日签到成功")
 		}).ElementR("span", `今日已签到`).MustHandle(func(c *rod.Element) {
-		utils.Info("AppleTuan 今日已签到成功")
+		logger.Info("[AppleTuan] 今日已签到成功")
 	}).MustDo()
 	return nil
 }

@@ -3,7 +3,7 @@ package support
 import (
 	"github.com/hb0730/auto-sign/application"
 	"github.com/hb0730/auto-sign/config"
-	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 )
 
 type AppleTuan struct {
@@ -13,7 +13,7 @@ type AppleTuan struct {
 var apple = application.AppleTuan{}
 
 func init() {
-	utils.Info("[appletuan] 开始注册 ....")
+	logger.Info("[support appletuan] 开始注册 ....")
 	tuan := AppleTuan{}
 	tuan.ISupport = tuan
 	tuan.Name = "苹果团"
@@ -21,7 +21,7 @@ func init() {
 }
 
 func (tuan AppleTuan) DoRun() error {
-	utils.Info("[appletuan] 开始签到 ")
+	logger.Info("[support appletuan] 开始签到 ")
 	yaml := config.ReadYaml()
 	cookies := yaml.GetStringMapString("appletuan.cookies")
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-rod/rod"
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 	"net/http"
 	"time"
 )
@@ -26,7 +27,7 @@ type Ld246 struct {
 //Start 开始
 func (ld Ld246) Start() error {
 	if ld.Username == "" {
-		utils.Warn("username is null")
+		logger.Info("[ld246] username is null")
 		return &utils.AutoSignError{
 			Module:  "ld246",
 			Method:  "start",
@@ -34,7 +35,7 @@ func (ld Ld246) Start() error {
 		}
 	}
 	if ld.Password == "" {
-		utils.Warn("password is null")
+		logger.Warn("[ld246]  password is null")
 		return &utils.AutoSignError{
 			Module:  "ld246",
 			Method:  "start",
@@ -45,19 +46,23 @@ func (ld Ld246) Start() error {
 }
 
 func (ld Ld246) doStart() error {
-	result := ld.Login()
+	result, err := ld.Login()
+	if err != nil {
+		return err
+	}
 	var cookies = map[string]string{
 		"symphony": result.Token,
 	}
 	ld.Sign(cookies)
 
-	ld.Logout(cookies)
-	return nil
+	return ld.Logout(cookies)
 }
 
 //Login 通过username/password 换取token
-func (ld Ld246) Login() LoginResult {
-	utils.Info("ld246 login .....")
+func (ld Ld246) Login() (LoginResult, error) {
+	logger.Info("[ld246]  login .....")
+	var result LoginResult
+
 	params := make(map[string]string, 0)
 	params["userName"] = ld.Username
 	params["userPassword"] = utils.GetMd5(ld.Password)
@@ -73,38 +78,38 @@ func (ld Ld246) Login() LoginResult {
 	}
 	request, err := req.CreateRequest()
 	if err != nil {
-		utils.Warn("create http request error")
-		panic(&utils.AutoSignError{
+		logger.Error("[ld246] create http request error")
+		return result, &utils.AutoSignError{
 			Module:  "ld246",
 			Method:  "login",
 			Message: "create http request error",
 			E:       err,
-		})
+		}
 	}
 	reponse, err := utils.HttpRequest(request, nil)
 	if err != nil {
-		utils.Warn("get response error")
-		panic(&utils.AutoSignError{
+		logger.Error("[ld246] get response error")
+		return result, &utils.AutoSignError{
 			Module:  "ld246",
 			Method:  "login",
 			Message: "get response error",
 			E:       err,
-		})
+		}
 	}
 	by, err := utils.GetBody(reponse)
 	if err != nil {
-		utils.Warn("get response error")
-		panic(&utils.AutoSignError{
+		logger.Error("[ld246] get response error")
+		return result, &utils.AutoSignError{
 			Module:  "ld246",
 			Method:  "login",
 			Message: "get response error",
 			E:       err,
-		})
+		}
 	}
-	utils.Info("login success")
-	var result LoginResult
+	logger.Info("[ld246] login success")
+
 	_ = json.Unmarshal(by, &result)
-	return result
+	return result, nil
 }
 
 // Sign 签到
@@ -126,19 +131,19 @@ func (ld Ld246) Sign(cookies utils.Cookies) {
 			_ = e.MustClick().WaitLoad()
 			page.MustNavigate("https://ld246.com/activity/checkin").MustWaitLoad()
 			html := page.MustElement("a.btn").MustWaitLoad().MustText()
-			utils.Info(fmt.Sprintf("签到成功,%s \n", html))
+			logger.Infof("[ld246] %s", fmt.Sprintf("签到成功,%s \n", html))
 		}).Element(`a.btn`).MustHandle(func(e *rod.Element) {
 		html := e.MustText()
 		str := fmt.Sprintf("今日已签到, %s \n", html)
-		utils.Info(str)
+		logger.Infof("[ld246] %s", str)
 	}).MustDo()
 }
 
 // Logout  登出
-func (ld Ld246) Logout(cookies utils.Cookies) {
+func (ld Ld246) Logout(cookies utils.Cookies) error {
 	if len(cookies) == 0 {
-		utils.Warn("token is null")
-		return
+		logger.Warn("[ld246] token is null")
+		return nil
 	}
 	req := utils.Request{
 		Method: "POST",
@@ -147,22 +152,22 @@ func (ld Ld246) Logout(cookies utils.Cookies) {
 	}
 	r, err := req.CreateRequest()
 	if err != nil {
-		utils.Warn("create http request error")
-		panic(err)
+		logger.Error("[ld246] create http request error")
+		return err
 	}
 	r.Header = setHeader()
 	reponse, err := utils.HttpRequest(r, cookies)
 	if err != nil {
-		utils.Warn("request error")
-		panic(err)
+		logger.Error("[ld246] request error")
+		return err
 	}
 	by, err := utils.GetBody(reponse)
 	if err != nil {
-		utils.Warn("get body error")
-		panic(err)
+		logger.Error("[ld246] get body error")
+		return err
 	}
-	utils.InfoF("logout success %v\n", string(by))
-
+	logger.Infof("[ld246] logout success %v\n", string(by))
+	return nil
 }
 
 type LoginResult struct {

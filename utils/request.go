@@ -2,6 +2,7 @@ package utils
 
 import (
 	"compress/gzip"
+	"github.com/mritd/logger"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -26,7 +27,7 @@ type Request struct {
 // 返回http.Request与error
 func (r Request) CreateRequest() (*http.Request, error) {
 	if r.Url == "" {
-		Warn("Request Url must be not null")
+		logger.Warn("[request] Request Url must be not null")
 		return nil, &AutoSignError{Module: "request utils", Method: "create request error", Message: "create request error :Request Url must be not null"}
 	}
 	if r.Method == "" {
@@ -34,7 +35,7 @@ func (r Request) CreateRequest() (*http.Request, error) {
 	}
 	request, err := http.NewRequest(r.Method, r.Url, strings.NewReader(r.Params))
 	if err != nil {
-		WarnF("http.NewRequest %v\n", err)
+		logger.Errorf("[request] http.NewRequest %v\n", err)
 		return nil, &AutoSignError{
 			Method:  "requst utils",
 			Message: "NewRequest error",
@@ -58,7 +59,7 @@ func HttpRequest(request *http.Request, cookies Cookies) (*http.Response, error)
 func ClientDo(request *http.Request) (*http.Response, error) {
 	response, e := http.DefaultClient.Do(request)
 	if e != nil {
-		ErrorF("request error %v\n", e)
+		logger.Error("[request] request error %v\n", e)
 		return nil, &AutoSignError{
 			Module: "request utils",
 			Method: "ClientDo error",

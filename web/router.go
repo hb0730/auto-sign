@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	fiberecover "github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/hb0730/auto-sign/utils"
+	log "github.com/mritd/logger"
 	"os"
 	"sort"
 	"strings"
@@ -43,12 +43,12 @@ func registerRoute(name string, f func(router *fiber.App)) {
 
 func registerRouteWithWeight(name string, weight int, f func(route *fiber.App)) {
 	if weight > 100 || weight < 0 {
-		utils.WarnF("route [%s] weight must be >= 0 and <=100", name)
+		log.Warnf("[router] route [%s] weight must be >= 0 and <=100", name)
 	}
 
 	for _, route := range routes {
 		if strings.ToLower(name) == strings.ToLower(route.Name) {
-			utils.WarnF("route [%s] already registered", route.Name)
+			log.Warnf("[router] route [%s] already registered", route.Name)
 		}
 	}
 	routes = append(routes, routerFunc{
@@ -69,7 +69,7 @@ func RouterSetup(router *fiber.App) {
 		sort.Sort(routes)
 		for _, r := range routes {
 			r.Func(router)
-			utils.InfoF("load route [%s] success...", r.Name)
+			log.Infof("[router] load route [%s] success...", r.Name)
 		}
 	})
 }

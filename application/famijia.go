@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 	"net/http"
 )
 
@@ -30,9 +31,9 @@ type Famijia struct {
 }
 
 func (f Famijia) Start() error {
-	utils.Info("Famijia sign start ...")
+	logger.Info("[Famijia] sign start ...")
 	if f.Token == "" || f.BlackBox == "" || f.DeviceId == "" {
-		utils.Warn("Famijia params is null")
+		logger.Warn("[Famijia] params is null")
 		return utils.AutoSignError{
 			Module:  "Famijia",
 			Method:  "Start",
@@ -42,7 +43,7 @@ func (f Famijia) Start() error {
 	return f.doStart()
 }
 func (f Famijia) doStart() error {
-	utils.Info("Famijia sign ....")
+	logger.Info("[Famijia] sign ....")
 	req := utils.Request{
 		Method: "POST",
 		Url:    "https://fmapp.chinafamilymart.com.cn/api/app/market/member/signin/sign",
@@ -72,9 +73,9 @@ func (f Famijia) doStart() error {
 		return err
 	}
 	if result.Code == "200" || result.Code == "3004000" {
-		utils.Info("Famijia sign success")
+		logger.Info("[Famijia] sign success")
 	} else {
-		utils.WarnF("Famijia sign failed message:【%s】", result.Message)
+		logger.Warnf("[Famijia] sign failed message:【%s】", result.Message)
 		return &utils.AutoSignError{
 			Module:  "Famijia",
 			Method:  "sign",

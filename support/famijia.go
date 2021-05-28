@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/hb0730/auto-sign/application"
 	"github.com/hb0730/auto-sign/config"
-	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 )
 
 type Famijia struct {
@@ -12,7 +12,7 @@ type Famijia struct {
 }
 
 func init() {
-	utils.Info("[Famijia] 开始注册 ....")
+	logger.Info("[support famijia] 开始注册 ....")
 	f := Famijia{}
 	f.ISupport = f
 	f.Name = "Fa米家"
@@ -20,7 +20,7 @@ func init() {
 }
 
 func (f Famijia) DoRun() error {
-	utils.Info("[Famijia] 开始签到 ")
+	logger.Info("[support famijia] 开始签到 ")
 	yaml := config.ReadYaml()
 
 	header := yaml.GetStringMap("famijia.headers")

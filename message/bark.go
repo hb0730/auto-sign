@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/hb0730/auto-sign/config"
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 )
 
 // https://github.com/Finb/bark-server
@@ -17,7 +18,7 @@ type Bark struct {
 var b = Bark{}
 
 func init() {
-	utils.Info("bark start ...")
+	logger.Info("[message bark] start ...")
 	yaml := config.ReadYaml()
 	bark := yaml.GetStringMapString("message.bark")
 	b.url = bark["url"]
@@ -41,7 +42,7 @@ func (b Bark) Send(messageBody MessageBody) {
 
 	request, err := req.CreateRequest()
 	if err != nil {
-		utils.ErrorF("[bark] 发送失败  error message 【%s】", err.Error())
+		logger.Errorf("[message bark] 发送失败  error message 【%s】", err.Error())
 		return
 	}
 	request.Header.Add("Content-Type", "application/json; charset=utf-8")

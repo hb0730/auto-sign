@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hb0730/auto-sign/config"
-	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 	mail2 "github.com/xhit/go-simple-mail/v2"
 	"sync"
 )
@@ -22,7 +22,7 @@ type Mail struct {
 var mail Mail
 
 func init() {
-	utils.Info("mail start ...")
+	logger.Info("[message mail] start ...")
 	yaml := config.ReadYaml()
 	mailMap := yaml.GetStringMap("message.mail")
 	bt, _ := json.Marshal(mailMap)
@@ -34,7 +34,7 @@ func (m Mail) Send(message MessageBody) {
 	eml := NewServer()
 	client, err := eml.Connect()
 	if err != nil {
-		utils.ErrorF("[mail] 发送失败 message error: 【%s】", err.Error())
+		logger.Errorf("[message mail] 发送失败 message error: 【%s】", err.Error())
 		return
 	}
 	msg := mail2.NewMSG()

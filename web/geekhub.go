@@ -6,7 +6,10 @@ import (
 	"github.com/hb0730/auto-sign/support"
 )
 
+var hub = support.Geekhub{}
+
 func init() {
+	hub.ISupport = hub
 	registerRoute("geekhub", func(c *fiber.App) {
 		c.Group("/geekhub").
 			Post("/cookie", func(c *fiber.Ctx) error {
@@ -18,7 +21,7 @@ func init() {
 // getCookie 获取Cookie
 func getCookie(c *fiber.Ctx) error {
 	var cookies map[string]string
-	c.BodyParser(&cookies)
+	_ = c.BodyParser(&cookies)
 	if len(cookies) == 0 {
 		return c.Status(200).JSON(failed(201, "Cookies size 0"))
 	} else {
@@ -34,9 +37,7 @@ func writerYaml(cookies map[string]string, c *fiber.Ctx) error {
 
 	config.LoadYaml()
 
-	hub := support.Geekhub{}
-	hub.ISupport = hub
-	hub.DoRun()
+	_ = hub.DoRun()
 
 	return c.Status(200).JSON(success())
 }

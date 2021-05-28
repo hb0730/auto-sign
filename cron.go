@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/hb0730/auto-sign/config"
 	"github.com/hb0730/auto-sign/support"
-	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 	"github.com/robfig/cron/v3"
 )
 
@@ -18,7 +18,7 @@ var jobs = make(map[string]Jobs)
 
 //ReadCron 读取cron表达式
 func ReadCron() (Cron, error) {
-	utils.Info("[cron]  read load yaml")
+	logger.Info("[cron]  read load yaml")
 	v := config.LoadYaml()
 	r := v.GetStringMapString("cron")
 	return Cron{Cron: r}, nil
@@ -31,14 +31,14 @@ type Cron struct {
 
 // StartCron 启动Cron
 func StartCron() error {
-	utils.Info("[cron] start ....")
+	logger.Info("[cron] start ....")
 	c := cron.New()
 	//每30分钟读取配置文件
 	_, err := c.AddFunc("30 * * * *", func() {
 		readCron, e := ReadCron()
 		//如果读取异常，则关闭守护
 		if e != nil {
-			utils.ErrorF(e.Error())
+			logger.Errorf("[cron] %s", e.Error())
 			c.Stop()
 			panic(e)
 			return
@@ -52,7 +52,7 @@ func StartCron() error {
 	})
 
 	if err != nil {
-		utils.ErrorF("%v\n", err)
+		logger.Errorf("[cron] %v\n", err)
 		return err
 	}
 	// 其中任务

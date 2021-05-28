@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/go-rod/rod"
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 	"time"
 )
 
@@ -15,9 +16,9 @@ type V2ex struct {
 
 //Start 开始
 func (v V2ex) Start() error {
-	utils.Info("v2ex checkin .....")
+	logger.Info("[v2ex] checkin .....")
 	if len(v.Cookies) == 0 {
-		utils.Warn("cookie len ==0")
+		logger.Warn("[v2ex] cookie len ==0")
 		return &utils.AutoSignError{
 			Module:  "v2ex",
 			Method:  "start",
@@ -43,9 +44,9 @@ func (v V2ex) doStart() error {
 			e.MustClick()
 			page.MustElementR("input", "领取 X 铜币").MustClick()
 			page.MustElementR(".message", "已成功领取每日登录奖励")
-			utils.Info("v2ex 签到成功")
+			logger.Info("[v2ex] 签到成功")
 		}).Element(`.balance_area`).MustHandle(func(el *rod.Element) {
-		utils.Info("v2ex 已经签过到了")
+		logger.Info("[v2ex] 已经签过到了")
 	}).MustDo()
 	return nil
 }

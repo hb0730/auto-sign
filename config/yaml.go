@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/mritd/logger"
 	"github.com/spf13/viper"
 	"os"
 	"path"
@@ -22,8 +23,7 @@ func LoadYaml() *viper.Viper {
 }
 
 func initViper() {
-	utils.Info("read yaml file init ...")
-	utils.Info("read yaml file")
+	logger.Info(" [config] read yaml file init ...")
 	workPath, _ := os.Executable()
 	filePath := path.Dir(workPath)
 	filePath = filepath.Join(filePath, "/config/application.yml")
