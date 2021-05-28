@@ -34,15 +34,15 @@ func (m Mail) Send(message MessageBody) {
 	eml := NewServer()
 	client, err := eml.Connect()
 	if err != nil {
-		utils.Error("create mail server error")
-		panic(err)
+		utils.ErrorF("[mail] 发送失败 message error: 【%s】", err.Error())
+		return
 	}
 	msg := mail2.NewMSG()
 	msg.SetFrom(setFrom(m.FromName, m.Username)).
 		AddTo(m.To).
 		SetSubject(message.Title).
 		SetBody(mail2.TextHTML, message.Content)
-	err = msg.Send(client)
+	_ = msg.Send(client)
 	defer client.Close()
 }
 

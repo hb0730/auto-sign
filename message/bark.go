@@ -41,7 +41,8 @@ func (b Bark) Send(messageBody MessageBody) {
 
 	request, err := req.CreateRequest()
 	if err != nil {
-		panic(err)
+		utils.ErrorF("[bark] 发送失败  error message 【%s】", err.Error())
+		return
 	}
 	request.Header.Add("Content-Type", "application/json; charset=utf-8")
 	_, _ = utils.HttpRequest(request, nil)

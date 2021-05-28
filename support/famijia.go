@@ -12,7 +12,7 @@ type Famijia struct {
 }
 
 func init() {
-	utils.Info("Famijia 开始注册 ....")
+	utils.Info("[Famijia] 开始注册 ....")
 	f := Famijia{}
 	f.ISupport = f
 	f.Name = "Fa米家"
@@ -20,7 +20,7 @@ func init() {
 }
 
 func (f Famijia) DoRun() error {
-	utils.Info("famijia 开始签到 ")
+	utils.Info("[Famijia] 开始签到 ")
 	yaml := config.ReadYaml()
 
 	header := yaml.GetStringMap("famijia.headers")

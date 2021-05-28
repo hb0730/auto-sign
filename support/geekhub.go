@@ -15,7 +15,7 @@ var hub = application.GeekHub{}
 
 // init 初始化 注册
 func init() {
-	utils.Info("geekhub 注册 ....")
+	utils.Info("[geekhub] 注册 ....")
 	hub := Geekhub{}
 	hub.Name = "geekhub"
 	hub.ISupport = hub
@@ -24,7 +24,7 @@ func init() {
 
 // DoRun 开始签到
 func (g Geekhub) DoRun() error {
-	utils.Info("geekhub 开始签到 ....")
+	utils.Info("[geekhub] 开始签到 ....")
 	yaml := config.ReadYaml()
 	cookies := yaml.GetStringMapString("geekhub.cookies")
 	hub.Cookies = cookies

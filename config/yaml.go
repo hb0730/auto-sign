@@ -8,10 +8,17 @@ import (
 	"path/filepath"
 )
 
-var Viper *viper.Viper
+var yaml *viper.Viper
 
+// ReadYaml 读取 *viper.Viper
 func ReadYaml() *viper.Viper {
-	return Viper
+	return yaml
+}
+
+// LoadYaml 重新加载配置并获取 *viper.Viper
+func LoadYaml() *viper.Viper {
+	initViper()
+	return yaml
 }
 
 func initViper() {
@@ -34,7 +41,7 @@ func initViper() {
 		})
 	}
 
-	Viper = viper.GetViper()
+	yaml = viper.GetViper()
 }
 
 func init() {

@@ -19,7 +19,8 @@ var jobs = make(map[string]Jobs)
 
 //ReadCron 读取cron表达式
 func ReadCron() (Cron, error) {
-	v := config.ReadYaml()
+	utils.Info("[main] read yaml")
+	v := config.LoadYaml()
 	r := v.GetStringMapString("cron")
 	return Cron{Cron: r}, nil
 }
@@ -30,7 +31,7 @@ type Cron struct {
 }
 
 func main() {
-	utils.Info("main start ....")
+	utils.Info("[main] start ....")
 	var wg sync.WaitGroup
 	wg.Add(1)
 	c := cron.New()

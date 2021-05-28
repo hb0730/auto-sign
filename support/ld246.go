@@ -13,7 +13,7 @@ type Ld246 struct {
 }
 
 func init() {
-	utils.Info("ld246 开始注册 ....")
+	utils.Info("[ld246] 开始注册 ....")
 	ld := Ld246{}
 	ld.Name = "ld246"
 	ld.ISupport = ld
@@ -21,7 +21,7 @@ func init() {
 }
 
 func (ld Ld246) DoRun() error {
-	utils.Info("ld246 开始签到 ...")
+	utils.Info("[ld246] 开始签到 ...")
 	yaml := config.ReadYaml()
 	user := yaml.GetStringMapString("ld246.user")
 	ld246.Username = user["username"]

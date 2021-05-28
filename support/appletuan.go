@@ -13,15 +13,15 @@ type AppleTuan struct {
 var apple = application.AppleTuan{}
 
 func init() {
-	utils.Info("appleTuan 开始注册 ....")
+	utils.Info("[appletuan] 开始注册 ....")
 	tuan := AppleTuan{}
 	tuan.ISupport = tuan
-	tuan.Name = "apple团"
+	tuan.Name = "苹果团"
 	Register("appletuan", tuan)
 }
 
 func (tuan AppleTuan) DoRun() error {
-	utils.Info("appletuan 开始签到 ")
+	utils.Info("[appletuan] 开始签到 ")
 	yaml := config.ReadYaml()
 	cookies := yaml.GetStringMapString("appletuan.cookies")
 

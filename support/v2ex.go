@@ -14,7 +14,7 @@ type V2ex struct {
 }
 
 func init() {
-	utils.Info("v2ex 开始注册 ....")
+	utils.Info("[v2ex] 开始注册 ....")
 	v := V2ex{}
 	v.Name = "v2ex"
 	v.ISupport = v
@@ -22,7 +22,7 @@ func init() {
 }
 
 func (v V2ex) DoRun() error {
-	utils.Info("v2ex 开始签到 ....")
+	utils.Info("[v2ex] 开始签到 ")
 	yaml := config.ReadYaml()
 	cookies := yaml.GetStringMapString("v2ex.cookies")
 	var cookie = make(map[string]string, 0)
