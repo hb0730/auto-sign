@@ -25,8 +25,17 @@ func init() {
 // DoRun 开始签到
 func (g Geekhub) DoRun() error {
 	utils.Info("[geekhub] 开始签到 ....")
-	yaml := config.ReadYaml()
-	cookies := yaml.GetStringMapString("geekhub.cookies")
+	cookies := GetGeekhubYaml()
 	hub.Cookies = cookies
 	return hub.Start()
+}
+
+// GetGeekhubYaml 获取Geekhub yaml配置
+func GetGeekhubYaml() map[string]string {
+	yaml := config.ReadYaml()
+	return yaml.GetStringMapString(GeekhubYamlKey())
+}
+
+func GeekhubYamlKey() string {
+	return "geekhub.cookies"
 }

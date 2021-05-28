@@ -1,89 +1,76 @@
 package main
 
 import (
-	"github.com/hb0730/auto-sign/config"
-	"github.com/hb0730/auto-sign/support"
+	"github.com/gofiber/fiber/v2"
 	"github.com/hb0730/auto-sign/utils"
-	"github.com/robfig/cron/v3"
-	"sync"
+	"github.com/hb0730/auto-sign/web"
+	"github.com/urfave/cli/v2"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
-
-//Jobs 用户记录运行的job
-type Jobs struct {
-	contextId cron.EntryID
-	jobName   string
-	cron      string
-}
-
-var jobs = make(map[string]Jobs)
-
-//ReadCron 读取cron表达式
-func ReadCron() (Cron, error) {
-	utils.Info("[main] read yaml")
-	v := config.LoadYaml()
-	r := v.GetStringMapString("cron")
-	return Cron{Cron: r}, nil
-}
-
-//Cron Cron struct
-type Cron struct {
-	Cron map[string]string
-}
 
 func main() {
 	utils.Info("[main] start ....")
-	var wg sync.WaitGroup
-	wg.Add(1)
-	c := cron.New()
-	//每30分钟读取配置文件
-	_, err := c.AddFunc("30 * * * *", func() {
-		readCron, e := ReadCron()
-		//如果读取异常，则关闭守护
-		if e != nil {
-			utils.ErrorF(e.Error())
-			c.Stop()
-			wg.Done()
-			return
-		}
-		if len(readCron.Cron) == 0 {
-			return
-		}
-		for k, v := range readCron.Cron {
-			doJob(k, v, c)
-		}
-	})
+	app := &cli.App{
+		Name:  "auto-sign server",
+		Usage: "auto sign ",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "addr",
+				Usage:   "Server listen address",
+				EnvVars: []string{"SERVER_ADDRESS"},
+				Value:   ":8080",
+			},
+		},
+		Authors: []*cli.Author{
+			{
+				Name: "hb0730", Email: "huangbing0730@gmail.com",
+			},
+		},
+		Action: func(c *cli.Context) error {
+			app := fiber.New(
+				fiber.Config{
+					ServerHeader: "auto-sign",
+					ErrorHandler: func(c *fiber.Ctx, err error) error {
+						code := fiber.StatusInternalServerError
+						if e, ok := err.(*fiber.Error); ok {
+							code = e.Code
+						}
+						return c.Status(code).JSON(web.Response{
+							Code:      code,
+							Message:   err.Error(),
+							Timestamp: time.Now().Unix(),
+						})
+					},
+				})
+			web.RouterSetup(app)
+			//启动 cron 监听 shutdown指令
+			go func() {
+				err := StartCron()
+				if err != nil {
+					utils.Warn("Cron start error ,Http Server shutdown")
+					if err := app.Shutdown(); err != nil {
+						utils.ErrorF("Server forced to shutdown error: %v", err)
+					}
+				}
 
+				sigs := make(chan os.Signal)
+				signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+				for range sigs {
+					utils.Warn("Received a termination signal, bark server shutdown...")
+					if err := app.Shutdown(); err != nil {
+						utils.ErrorF("Server forced to shutdown error: %v", err)
+					}
+				}
+			}()
+			return app.Listen(c.String("addr"))
+		},
+	}
+	err := app.Run(os.Args)
 	if err != nil {
-		utils.ErrorF("%v\n", err)
-		wg.Done()
-	}
-	// 其中任务
-	c.Run()
-	// 关闭任务
-	defer c.Stop()
-
-	wg.Wait()
-}
-
-func doJob(name string, value string, c *cron.Cron) {
-	job, ok := jobs[name]
-	//新添加的
-	if !ok {
-		do(name, value, c)
-	} else if ok && job.cron != value {
-		// 已存在 ,且cron已修改
-		c.Remove(job.contextId)
-		do(name, value, c)
-	}
-}
-
-func do(k string, v string, c *cron.Cron) {
-	run, ok := support.Supports[k]
-	if !ok {
-		return
-	}
-	id, err := c.AddJob(v, run)
-	if err == nil {
-		jobs[k] = Jobs{contextId: id, jobName: k, cron: v}
+		utils.ErrorF("[main] start error,error message:【 %s 】", err.Error())
+		os.Exit(-1)
 	}
 }
