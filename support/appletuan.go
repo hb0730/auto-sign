@@ -22,9 +22,16 @@ func init() {
 
 func (tuan AppleTuan) DoRun() error {
 	logger.Info("[support appletuan] 开始签到 ")
-	yaml := config.ReadYaml()
-	cookies := yaml.GetStringMapString("appletuan.cookies")
-
+	cookies := GetAppleTuanYaml()
 	apple.Cookies = cookies
 	return apple.Start()
+}
+
+func GetAppleTuanYamlKey() string {
+	return "appletuan.cookies"
+}
+
+func GetAppleTuanYaml() map[string]string {
+	yaml := config.ReadYaml()
+	return yaml.GetStringMapString(GetAppleTuanYamlKey())
 }

@@ -23,8 +23,12 @@ func init() {
 func (ld Ld246) DoRun() error {
 	logger.Info("[support ld246] 开始签到 ...")
 	yaml := config.ReadYaml()
-	user := yaml.GetStringMapString("ld246.user")
+	user := yaml.GetStringMapString(GetLd246YamlKey())
 	ld246.Username = user["username"]
 	ld246.Password = user["password"]
 	return ld246.Start()
+}
+
+func GetLd246YamlKey() string {
+	return "ld246.user"
 }

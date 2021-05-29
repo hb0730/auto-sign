@@ -13,31 +13,28 @@ func init() {
 	registerRoute("geekhub", func(c *fiber.App) {
 		c.Group("/geekhub").
 			Post("/cookie", func(c *fiber.Ctx) error {
-				return getCookie(c)
+				return getGeekhubCookies(c)
 			})
 	})
 }
 
-// getCookie 获取Cookie
-func getCookie(c *fiber.Ctx) error {
+// getGeekhubCookies 获取Cookie
+func getGeekhubCookies(c *fiber.Ctx) error {
 	var cookies map[string]string
 	_ = c.BodyParser(&cookies)
 	if len(cookies) == 0 {
 		return c.Status(200).JSON(failed(201, "Cookies size 0"))
-	} else {
-		return writerYaml(cookies, c)
 	}
-}
 
-// writerYaml 将cookie写入yaml并触发sign
-func writerYaml(cookies map[string]string, c *fiber.Ctx) error {
 	yaml := config.ReadYaml()
 	yaml.Set(support.GeekhubYamlKey(), cookies)
 	_ = yaml.WriteConfig()
 
 	config.LoadYaml()
 
-	_ = hub.DoRun()
+	go func() {
+		hub.Run()
+	}()
 
 	return c.Status(200).JSON(success())
 }

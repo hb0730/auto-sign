@@ -24,11 +24,15 @@ func init() {
 func (v V2ex) DoRun() error {
 	logger.Info("[support v2ex] 开始签到 ...")
 	yaml := config.ReadYaml()
-	cookies := yaml.GetStringMapString("v2ex.cookies")
+	cookies := yaml.GetStringMapString(GetV2exYamlKey())
 	var cookie = make(map[string]string, 0)
 	for k, v := range cookies {
 		cookie[strings.ToUpper(k)] = v
 	}
 	v2ex.Cookies = cookie
 	return v2ex.Start()
+}
+
+func GetV2exYamlKey() string {
+	return "v2ex.cookies"
 }
