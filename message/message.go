@@ -17,6 +17,12 @@ func GetSupport() Message {
 	return Messages[key]
 }
 
+// Enabled 是否启用
+func Enabled() bool {
+	yaml := config.ReadYaml()
+	return yaml.GetBool("message.enabled")
+}
+
 // Register 注册
 func Register(name string, message Message) {
 	Messages[name] = message

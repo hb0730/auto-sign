@@ -89,5 +89,8 @@ func send(body message.MessageBody) {
 	if m == nil {
 		return
 	}
-	m.Send(body)
+	enabled := message.Enabled()
+	if enabled {
+		m.Send(body)
+	}
 }

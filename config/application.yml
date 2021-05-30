@@ -24,6 +24,7 @@ famijia:
     black_box:
     device_id:
 message:
+  enabled: true
   type: bark
   bark:
     url:
