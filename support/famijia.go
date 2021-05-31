@@ -11,6 +11,8 @@ type Famijia struct {
 	Support
 }
 
+var fa = application.Famijia{}
+
 func init() {
 	logger.Info("[support famijia] 开始注册 ....")
 	f := Famijia{}
@@ -28,7 +30,6 @@ func (f Famijia) DoRun() error {
 	var rest FaMiJia
 	_ = json.Unmarshal(bt, &rest)
 
-	fa := application.Famijia{}
 	fa.Token = rest.Token
 	fa.BlackBox = rest.BlackBox
 	fa.DeviceId = rest.DeviceId

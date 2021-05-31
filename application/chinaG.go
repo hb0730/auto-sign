@@ -13,7 +13,7 @@ type ChinaG struct {
 	Password string
 }
 
-func (g ChinaG) DoRun() error {
+func (g ChinaG) Start() error {
 	if g.Username == "" || g.Password == "" {
 		logger.Warn("[ChinaG] username/password is null")
 		return utils.AutoSignError{
@@ -47,10 +47,12 @@ func (g ChinaG) doStart() error {
 	page.MustWaitOpen()
 	//等待页面渲染
 	page.MustWaitLoad()
+	// 关闭弹窗
+	page.MustElement(".dialog-footer > button").MustClick().MustWaitLoad()
 
-	page.MustElement(".dialog-footer > button").MustClick()
-	page.Race().ElementR(`a`, "签到").MustHandle(func(c *rod.Element) {
-
+	page.Race().ElementR(`a`, "签到流量").MustHandle(func(e *rod.Element) {
+		e.MustClick()
+		logger.Info("[ChinaG] 签到成功")
 	}).ElementR(`a`, "今日已签").MustHandle(func(e *rod.Element) {
 
 		logger.Info("[ChinaG] 今日已签到")

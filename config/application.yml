@@ -4,6 +4,7 @@ cron:
   ld246: "5 0 * * *"
   v2ex: "0 8 * * *"
   famijia: "10 8 * * *"
+  chinaG: "20 8 * * *"
 geekhub:
   cookies:
     _session_id:
@@ -23,6 +24,10 @@ famijia:
     token:
     black_box:
     device_id:
+chinaG:
+  user:
+    username:
+    password:
 message:
   enabled: true
   type: bark
