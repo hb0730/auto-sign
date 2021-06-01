@@ -26,7 +26,7 @@ func (g ChinaG) Start() error {
 }
 
 func (g ChinaG) doStart() error {
-	b := utils.CreateBrowser(false)
+	b := utils.CreateBrowser(true)
 	defer b.MustClose()
 	//login
 	page := b.MustPage("https://cc.ax/signin").MustWaitLoad()
