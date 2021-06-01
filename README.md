@@ -1,10 +1,10 @@
 # auto-sign
+
 go 实现签到
 
-## geekhub 
+## geekhub
 
-代码实现 [geekhub](https://geekhub.com) 的签到
-首先需要一个原始的`_session_id`
+代码实现 [geekhub](https://geekhub.com) 的签到 首先需要一个原始的`_session_id`
 
 ```go
 cookie := make(map[string]string, 1)
@@ -13,11 +13,9 @@ geekhub := Geekhub{Cookies: cookie}
 geekhub.Start()
 ```
 
+## appletuan
 
-## appletuan 
-
-代码实现[appletuan](https://appletuan.com)的签到
-首先需要一个原始的`_session_id`
+代码实现[appletuan](https://appletuan.com)的签到 首先需要一个原始的`_session_id`
 
 ```go
 tuan := AppleTuan{Cookies: map[string]string{
@@ -34,6 +32,7 @@ tuan.Start()
 ld := LD{Username: "", Password: ""}
 ld.Start()
 ```
+
 ## V2ex
 
 代码实现 [V2ex](https://V2ex.com) 的签到
@@ -47,6 +46,20 @@ v2.Start()
 ```
 
 需要Cookie中的`v2`,`PB3_SESSION`
+
+## ChinaG
+
+代码实现 [ChinaG](https://cc.ax/) 自动签到
+
+```go
+g := ChinaG{
+"username",
+"password",
+}
+_ = g.Start()
+```
+
+需要 username/password 即可
 
 # Message 消息推送
 
@@ -76,17 +89,20 @@ key: 密钥
 ```
 
 # 依赖
+
 * [rod](https://github.com/go-rod/rod) 用于checkin
 * [yaml/v1](github.com/spf13/viper)  用于读取yaml配置
 * [cron](https://github.com/robfig/cron) 定时任务
 * [mail](https://github.com/xhit/go-simple-mail) email发送
 
-# Docker 
+# Docker
+
 [hb0730/auto-sign](https://hub.docker.com/r/hb0730/auto-sign)
 
 具体请看 `docker-compsoe`
 
-# demo 
+# demo
+
 ```yaml
 cron:
   geekhub: "0 7 * * *"
