@@ -1,6 +1,7 @@
 package support
 
 import (
+	"fmt"
 	"github.com/go-rod/rod"
 	"github.com/hb0730/auto-sign/message"
 	"github.com/mritd/logger"
@@ -36,23 +37,23 @@ func (s Support) Run() {
 	})
 	if err != nil {
 		logger.Error(err.Error())
-		sendMessageError(err)
+		sendMessageError(s.Name, err)
 	} else {
 		sendSuccess(s.Name)
 	}
 }
 
 // Register 将支持的类型进行注册
-func Register(name string, support AutoRun) {
-	Supports[name] = support
+func Register(cronName string, support AutoRun) {
+	Supports[cronName] = support
 }
 
 // retry 尝试机制
 func retry(a Support, num int) {
 	err := rod.Try(func() {
-		e := a.DoRun()
-		if e != nil {
-			panic(e)
+		err := a.DoRun()
+		if err != nil {
+			panic(err)
 		}
 	})
 	if err != nil && num > 0 {
@@ -61,16 +62,17 @@ func retry(a Support, num int) {
 			time.Sleep(time.Duration(3) * time.Second)
 			retry(a, num)
 		}
+
 	} else if err != nil {
 		panic(err)
 	}
 }
 
 // sendMessageError 发送错误信息
-func sendMessageError(err error) {
+func sendMessageError(name string, err error) {
 	var body = message.MessageBody{}
 	body.Title = "签到失败"
-	body.Content = err.Error()
+	body.Content = fmt.Sprintf("%s,签到失败，错误信息: 【%s】", name, err.Error())
 	send(body)
 }
 

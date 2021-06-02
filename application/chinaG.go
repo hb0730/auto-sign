@@ -59,7 +59,8 @@ func (g ChinaG) doStart() error {
 	}).MustDo()
 
 	//logout
-	page.MustElementR(`a.nav-link[href="/user/logout" ]`, "登出").MustClick().MustWaitLoad()
+	page.MustElementR(`a.nav-link[href="/user/logout" ]`, "登出").MustClick()
+	page.MustWaitOpen()
 
 	return nil
 }

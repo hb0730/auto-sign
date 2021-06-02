@@ -15,7 +15,7 @@ var hub = application.GeekHub{}
 
 // init 初始化 注册
 func init() {
-	logger.Info("[message geekhub] 注册 ....")
+	logger.Info("[support geekhub] 注册 ....")
 	hub := Geekhub{}
 	hub.Name = "geekhub"
 	hub.ISupport = hub

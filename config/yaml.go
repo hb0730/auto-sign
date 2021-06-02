@@ -23,7 +23,7 @@ func LoadYaml() *viper.Viper {
 }
 
 func initViper() {
-	logger.Info(" [config] read yaml file init ...")
+	logger.Info("[config] read yaml file init ...")
 	workPath, _ := os.Executable()
 	filePath := path.Dir(workPath)
 	filePath = filepath.Join(filePath, "/config/application.yml")

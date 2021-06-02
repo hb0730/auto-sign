@@ -1,10 +1,3 @@
-cron:
-  geekhub: "0 7 * * *"
-  appletuan: "40 7 * * *"
-  ld246: "5 0 * * *"
-  v2ex: "0 8 * * *"
-  famijia: "10 8 * * *"
-  chinaG: "20 8 * * *"
 geekhub:
   cookies:
     _session_id:
@@ -17,8 +10,8 @@ ld246:
     password:
 v2ex:
   cookies:
-    A2:
     PB3_SESSION:
+    A2:
 famijia:
   headers:
     token:
@@ -28,17 +21,24 @@ chinaG:
   user:
     username:
     password:
+cron:
+  geekhub: "0 7 * * *"
+  appletuan: "40 7 * * *"
+  ld246: "5 0 * * *"
+  v2ex: "0 8 * * *"
+  famijia: "10 8 * * *"
+  chinag: "20 8 * * *"
 message:
   enabled: true
-  type: bark
+  type: "bark"
   bark:
     url:
     key:
   mail:
-    host:
-    protocol:
+    host: "smtp.qq.com"
+    protocol: "smtp"
     port: 465
     username:
     password:
-    from_name:
+    from_name: "auto-sign"
     to:
