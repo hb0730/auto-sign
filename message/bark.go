@@ -20,7 +20,7 @@ var b = Bark{}
 func init() {
 	logger.Info("[message bark] start ...")
 	yaml := config.ReadYaml()
-	bark := yaml.GetStringMapString("message.bark")
+	bark := yaml.StringMap("message.bark")
 	b.url = bark["url"]
 	b.key = bark["key"]
 	Register("bark", b)

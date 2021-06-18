@@ -24,7 +24,7 @@ var mail Mail
 func init() {
 	logger.Info("[message mail] start ...")
 	yaml := config.ReadYaml()
-	mailMap := yaml.GetStringMap("message.mail")
+	mailMap := yaml.StringMap("message.mail")
 	bt, _ := json.Marshal(mailMap)
 	_ = json.Unmarshal(bt, &mail)
 	Register("mail", mail)

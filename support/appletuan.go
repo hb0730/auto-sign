@@ -33,5 +33,5 @@ func GetAppleTuanYamlKey() string {
 
 func GetAppleTuanYaml() map[string]string {
 	yaml := config.ReadYaml()
-	return yaml.GetStringMapString(GetAppleTuanYamlKey())
+	return yaml.StringMap(GetAppleTuanYamlKey())
 }

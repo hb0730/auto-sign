@@ -23,7 +23,7 @@ func init() {
 func (g ChinaG) DoRun() error {
 	logger.Info("[support chinaG] 开始签到 ...")
 	yaml := config.ReadYaml()
-	u := yaml.GetStringMapString(GetChinaGYamlKey())
+	u := yaml.StringMap(GetChinaGYamlKey())
 	var username = u["username"]
 	var password = u["password"]
 	gg.Username = username

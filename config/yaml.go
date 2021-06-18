@@ -2,6 +2,9 @@ package config
 
 import (
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/file"
 	"github.com/mritd/logger"
 	"github.com/spf13/viper"
 	"os"
@@ -9,17 +12,40 @@ import (
 	"path/filepath"
 )
 
-var yaml *viper.Viper
+var k *koanf.Koanf
 
-// ReadYaml 读取 *viper.Viper
-func ReadYaml() *viper.Viper {
-	return yaml
+func ReadYaml() *koanf.Koanf {
+	if k == nil {
+		return LoadKoanf()
+	}
+	return k
+}
+func LoadKoanf() *koanf.Koanf {
+	load()
+	return k
+}
+func load() {
+	k = koanf.New(".")
+	_ = k.Load(file.Provider("./config/application.yml"), yaml.Parser())
+	_ = k.Load(file.Provider("../config/application.yml"), yaml.Parser())
+	workPath, _ := os.Executable()
+	filePath := path.Dir(workPath)
+	filePath = filepath.Join(filePath, "/config/application.yml")
+	_ = k.Load(file.Provider(filePath), yaml.Parser())
 }
 
-// LoadYaml 重新加载配置并获取 *viper.Viper
-func LoadYaml() *viper.Viper {
+var v *viper.Viper
+
+func GetViper() *viper.Viper {
+	if v == nil {
+		return LoadViper()
+	}
+	return v
+}
+
+func LoadViper() *viper.Viper {
 	initViper()
-	return yaml
+	return v
 }
 
 func initViper() {
@@ -41,9 +67,5 @@ func initViper() {
 		})
 	}
 
-	yaml = viper.GetViper()
-}
-
-func init() {
-	initViper()
+	v = viper.GetViper()
 }

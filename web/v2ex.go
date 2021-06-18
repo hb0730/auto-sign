@@ -28,16 +28,12 @@ func getV2exBody(c *fiber.Ctx) error {
 		logger.Warn("[web v2ex] cookie size 0")
 		return c.Status(200).JSON(failed(201, "cookies size 0"))
 	}
-	yaml := config.ReadYaml()
+	yaml := config.GetViper()
 	yaml.Set(support.GetV2exYamlKey(), cookies)
 	err = yaml.WriteConfig()
 	if err != nil {
 		return err
 	}
-	config.LoadYaml()
-
-	go func() {
-		v2ex.Run()
-	}()
+	go Run(v2ex)
 	return c.Status(200).JSON(success())
 }

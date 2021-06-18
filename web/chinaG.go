@@ -28,18 +28,13 @@ func getChinaGBody(c *fiber.Ctx) error {
 		return c.Status(200).
 			JSON(failed(201, "username/password is null"))
 	}
-	yaml := config.ReadYaml()
+	yaml := config.GetViper()
 	yaml.Set(support.GetChinaGYamlKey(), user)
 	err = yaml.WriteConfig()
 	if err != nil {
 		return err
 	}
-
-	config.LoadYaml()
-	go func() {
-		gg.Run()
-	}()
-
+	go Run(gg)
 	return c.Status(200).
 		JSON(success())
 }

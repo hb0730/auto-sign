@@ -26,14 +26,12 @@ var famijiaHeaders = map[string]string{
 
 // Famijia Fa米家签到
 type Famijia struct {
-	Token    string
-	BlackBox string
-	DeviceId string
+	Headers map[string]string
 }
 
 func (f Famijia) Start() error {
 	logger.Info("[Famijia] sign start ...")
-	if f.Token == "" || f.BlackBox == "" || f.DeviceId == "" {
+	if len(headers) == 0 {
 		logger.Warn("[Famijia] params is null")
 		return utils.AutoSignError{
 			Module:  "Famijia",
@@ -45,7 +43,7 @@ func (f Famijia) Start() error {
 }
 func (f Famijia) doStart() error {
 	logger.Info("[Famijia] sign ....")
-	re, err := request.CreateRequest(
+	rq, err := request.CreateRequest(
 		"POST",
 		"https://fmapp.chinafamilymart.com.cn/api/app/market/member/signin/sign",
 		"")
@@ -53,15 +51,13 @@ func (f Famijia) doStart() error {
 		return err
 	}
 
-	re.Header(convertHeader())
-	re.AddHeader("blackBox", f.BlackBox)
-	re.AddHeader("deviceId", f.DeviceId)
-	re.AddHeader("token", f.Token)
-	err = re.Do()
+	rq.Header(convertHeader())
+	rq.AddHeaders(f.Headers)
+	err = rq.Do()
 	if err != nil {
 		return err
 	}
-	bt, err := re.GetBody()
+	bt, err := rq.GetBody()
 	if err != nil {
 		return err
 	}
@@ -71,7 +67,7 @@ func (f Famijia) doStart() error {
 		return err
 	}
 	if result.Code == "200" || result.Code == "3004000" {
-		logger.Info("[Famijia] sign success,message:【%s】", result.Message)
+		logger.Infof("[Famijia] sign success,message:【%s】", result.Message)
 	} else {
 		logger.Warnf("[Famijia] sign failed message:【%s】", result.Message)
 		return &utils.AutoSignError{

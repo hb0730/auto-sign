@@ -24,12 +24,9 @@ func getAppleTuanBody(c *fiber.Ctx) error {
 	if len(Cookie) == 0 {
 		return c.Status(200).JSON(failed(200, "cookie size 0"))
 	}
-	yaml := config.ReadYaml()
+	yaml := config.GetViper()
 	yaml.Set(support.GetAppleTuanYamlKey(), Cookie)
 	_ = yaml.WriteConfig()
-	config.LoadYaml()
-	go func() {
-		apple.Run()
-	}()
+	go Run(apple)
 	return c.Status(200).JSON(success())
 }

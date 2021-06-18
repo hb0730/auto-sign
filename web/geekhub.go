@@ -26,15 +26,10 @@ func getGeekhubCookies(c *fiber.Ctx) error {
 		return c.Status(200).JSON(failed(201, "Cookies size 0"))
 	}
 
-	yaml := config.ReadYaml()
+	yaml := config.GetViper()
 	yaml.Set(support.GeekhubYamlKey(), cookies)
 	_ = yaml.WriteConfig()
-
-	config.LoadYaml()
-
-	go func() {
-		hub.Run()
-	}()
+	go Run(hub)
 
 	return c.Status(200).JSON(success())
 }

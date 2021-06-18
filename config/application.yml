@@ -15,8 +15,8 @@ v2ex:
 famijia:
   headers:
     token:
-    black_box:
-    device_id:
+    blackBox:
+    deviceId:
 chinaG:
   user:
     username:

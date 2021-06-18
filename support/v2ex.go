@@ -4,7 +4,6 @@ import (
 	"github.com/hb0730/auto-sign/application"
 	"github.com/hb0730/auto-sign/config"
 	"github.com/mritd/logger"
-	"strings"
 )
 
 var v2ex = application.V2ex{}
@@ -24,12 +23,8 @@ func init() {
 func (v V2ex) DoRun() error {
 	logger.Info("[support v2ex] 开始签到 ...")
 	yaml := config.ReadYaml()
-	cookies := yaml.GetStringMapString(GetV2exYamlKey())
-	var cookie = make(map[string]string, 0)
-	for k, v := range cookies {
-		cookie[strings.ToUpper(k)] = v
-	}
-	v2ex.Cookies = cookie
+	cookies := yaml.StringMap(GetV2exYamlKey())
+	v2ex.Cookies = cookies
 	return v2ex.Start()
 }
 

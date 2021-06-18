@@ -33,7 +33,7 @@ func (g Geekhub) DoRun() error {
 // GetGeekhubYaml 获取Geekhub yaml配置
 func GetGeekhubYaml() map[string]string {
 	yaml := config.ReadYaml()
-	return yaml.GetStringMapString(GeekhubYamlKey())
+	return yaml.StringMap(GeekhubYamlKey())
 }
 
 func GeekhubYamlKey() string {

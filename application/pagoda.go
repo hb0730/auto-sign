@@ -23,7 +23,7 @@ func (p *PagodaWxMini) Start() error {
 		return utils.AutoSignError{
 			Module:  "wx-mini-pagoda",
 			Method:  "sign",
-			Message: "headers is null",
+			Message: "Headers is null",
 		}
 	}
 	return p.sign()

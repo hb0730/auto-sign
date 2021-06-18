@@ -13,14 +13,14 @@ type Message interface {
 // GetSupport 获取支持
 func GetSupport() Message {
 	yaml := config.ReadYaml()
-	key := yaml.GetString("message.type")
+	key := yaml.String("message.type")
 	return Messages[key]
 }
 
 // Enabled 是否启用
 func Enabled() bool {
 	yaml := config.ReadYaml()
-	return yaml.GetBool("message.enabled")
+	return yaml.Bool("message.enabled")
 }
 
 // Register 注册

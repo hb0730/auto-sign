@@ -24,12 +24,9 @@ func getLd246Body(c *fiber.Ctx) error {
 	if user.Username == "" || user.Password == "" {
 		return c.Status(200).JSON(failed(201, "username/password is null"))
 	}
-	yaml := config.ReadYaml()
+	yaml := config.GetViper()
 	yaml.Set(support.GetLd246YamlKey(), user)
-	config.LoadYaml()
-	go func() {
-		ld246.Run()
-	}()
+	go Run(ld246)
 	return c.Status(200).JSON(success())
 
 }
