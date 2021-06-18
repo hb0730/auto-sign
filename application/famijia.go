@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/hb0730/auto-sign/utils/request"
 	"github.com/mritd/logger"
 	"net/http"
 )
@@ -44,26 +45,23 @@ func (f Famijia) Start() error {
 }
 func (f Famijia) doStart() error {
 	logger.Info("[Famijia] sign ....")
-	req := utils.Request{
-		Method: "POST",
-		Url:    "https://fmapp.chinafamilymart.com.cn/api/app/market/member/signin/sign",
-		Params: "",
-	}
-	request, err := req.CreateRequest()
+	re, err := request.CreateRequest(
+		"POST",
+		"https://fmapp.chinafamilymart.com.cn/api/app/market/member/signin/sign",
+		"")
 	if err != nil {
 		return err
 	}
-	//常规header
-	request.Header = convertHeader()
-	request.Header.Set("blackBox", f.BlackBox)
-	request.Header.Set("deviceId", f.DeviceId)
-	request.Header.Set("token", f.Token)
 
-	response, err := utils.HttpRequest(request, nil)
+	re.Header(convertHeader())
+	re.AddHeader("blackBox", f.BlackBox)
+	re.AddHeader("deviceId", f.DeviceId)
+	re.AddHeader("token", f.Token)
+	err = re.Do()
 	if err != nil {
 		return err
 	}
-	bt, err := utils.GetBody(response)
+	bt, err := re.GetBody()
 	if err != nil {
 		return err
 	}
@@ -73,7 +71,7 @@ func (f Famijia) doStart() error {
 		return err
 	}
 	if result.Code == "200" || result.Code == "3004000" {
-		logger.Info("[Famijia] sign success")
+		logger.Info("[Famijia] sign success,message:【%s】", result.Message)
 	} else {
 		logger.Warnf("[Famijia] sign failed message:【%s】", result.Message)
 		return &utils.AutoSignError{

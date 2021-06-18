@@ -3,7 +3,7 @@ package message
 import (
 	"encoding/json"
 	"github.com/hb0730/auto-sign/config"
-	"github.com/hb0730/auto-sign/utils"
+	"github.com/hb0730/auto-sign/utils/request"
 	"github.com/mritd/logger"
 )
 
@@ -34,20 +34,20 @@ func (b Bark) Send(messageBody MessageBody) {
 	body.Title = messageBody.Title
 	body.Body = messageBody.Content
 	bt, _ := json.Marshal(body)
-	req := utils.Request{
-		Method: "POST",
-		Url:    url,
-		Params: string(bt),
-	}
-
-	request, err := req.CreateRequest()
+	rq, err := request.CreateRequest(
+		"POST",
+		url,
+		string(bt),
+	)
 	if err != nil {
 		logger.Errorf("[message bark] 发送失败  error message 【%s】", err.Error())
 		return
 	}
-	request.Header.Add("Content-Type", "application/json; charset=utf-8")
-	_, _ = utils.HttpRequest(request, nil)
-
+	rq.AddHeader("Content-Type", "application/json; charset=utf-8")
+	err = rq.Do()
+	if err != nil {
+		logger.Errorf("[message bark] 发送失败  error message 【%s】", err.Error())
+	}
 }
 
 type requestBody struct {

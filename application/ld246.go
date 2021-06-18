@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-rod/rod"
 	"github.com/hb0730/auto-sign/utils"
+	"github.com/hb0730/auto-sign/utils/request"
 	"github.com/mritd/logger"
 	"net/http"
 	"time"
@@ -67,44 +68,20 @@ func (ld Ld246) Login() (LoginResult, error) {
 	params["userName"] = ld.Username
 	params["userPassword"] = utils.GetMd5(ld.Password)
 	requestBody, _ := json.Marshal(params)
-
-	header := http.Header{}
-	header.Set("Content-Type", "application/json;charset=UTF-8")
-
-	req := utils.Request{
-		Method: "POST",
-		Url:    "https://ld246.com/api/v2/login",
-		Params: string(requestBody),
-	}
-	request, err := req.CreateRequest()
+	rq, err := request.CreateRequest(
+		"POST",
+		"https://ld246.com/api/v2/login",
+		string(requestBody))
 	if err != nil {
-		logger.Error("[ld246] create http request error")
-		return result, &utils.AutoSignError{
-			Module:  "ld246",
-			Method:  "login",
-			Message: "create http request error",
-			E:       err,
-		}
+		return result, err
 	}
-	reponse, err := utils.HttpRequest(request, nil)
+	err = rq.Do()
 	if err != nil {
-		logger.Error("[ld246] get response error")
-		return result, &utils.AutoSignError{
-			Module:  "ld246",
-			Method:  "login",
-			Message: "get response error",
-			E:       err,
-		}
+		return result, err
 	}
-	by, err := utils.GetBody(reponse)
+	by, err := rq.GetBody()
 	if err != nil {
-		logger.Error("[ld246] get response error")
-		return result, &utils.AutoSignError{
-			Module:  "ld246",
-			Method:  "login",
-			Message: "get response error",
-			E:       err,
-		}
+		return result, err
 	}
 	logger.Info("[ld246] login success")
 
@@ -113,7 +90,7 @@ func (ld Ld246) Login() (LoginResult, error) {
 }
 
 // Sign 签到
-func (ld Ld246) Sign(cookies utils.Cookies) {
+func (ld Ld246) Sign(cookies map[string]string) {
 	b := utils.CreateBrowser(true)
 	defer b.MustClose()
 	page := b.MustSetCookies(utils.ConvertRodCookies(cookies, ".ld246.com")...).
@@ -140,32 +117,26 @@ func (ld Ld246) Sign(cookies utils.Cookies) {
 }
 
 // Logout  登出
-func (ld Ld246) Logout(cookies utils.Cookies) error {
+func (ld Ld246) Logout(cookies map[string]string) error {
 	if len(cookies) == 0 {
 		logger.Warn("[ld246] token is null")
 		return nil
 	}
-	req := utils.Request{
-		Method: "POST",
-		Url:    "https://ld246.com/api/v2/logout",
-		Params: "",
-	}
-	r, err := req.CreateRequest()
+	rq, err := request.CreateRequest(
+		"POST",
+		"https://ld246.com/api/v2/logout",
+		"",
+	)
 	if err != nil {
-		logger.Error("[ld246] create http request error")
 		return err
 	}
-	r.Header = setHeader()
-	reponse, err := utils.HttpRequest(r, cookies)
+	rq.Header(setHeader())
+	rq.AddCookiesFromMap(cookies)
+	err = rq.Do()
 	if err != nil {
-		logger.Error("[ld246] request error")
 		return err
 	}
-	by, err := utils.GetBody(reponse)
-	if err != nil {
-		logger.Error("[ld246] get body error")
-		return err
-	}
+	by, err := rq.GetBody()
 	logger.Infof("[ld246] logout success %v\n", string(by))
 	return nil
 }
