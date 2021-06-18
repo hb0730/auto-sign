@@ -12,7 +12,7 @@ import (
 // GeekHub 通过cookie进行签到
 type GeekHub struct {
 	//Cookies
-	Cookies utils.Cookies
+	Cookies map[string]string
 }
 
 //Start 开始

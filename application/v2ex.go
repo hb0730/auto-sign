@@ -11,7 +11,7 @@ import (
 
 //V2ex 通过Cookie签到
 type V2ex struct {
-	Cookies utils.Cookies
+	Cookies map[string]string
 }
 
 //Start 开始

@@ -11,7 +11,7 @@ import (
 
 // AppleTuan 通过cookie进行签到
 type AppleTuan struct {
-	Cookies utils.Cookies
+	Cookies map[string]string
 }
 
 //Start 开始
