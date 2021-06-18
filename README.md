@@ -91,7 +91,8 @@ key: 密钥
 # 依赖
 
 * [rod](https://github.com/go-rod/rod) 用于checkin
-* [yaml/v1](github.com/spf13/viper)  用于读取yaml配置
+* [yaml/v1](github.com/spf13/viper)  用于写yaml
+* [koanf](https://github.com/knadh/koanf)  用于读取yaml(解决大小写敏感)
 * [cron](https://github.com/robfig/cron) 定时任务
 * [mail](https://github.com/xhit/go-simple-mail) email发送
 
@@ -104,11 +105,6 @@ key: 密钥
 # demo
 
 ```yaml
-cron:
-  geekhub: "0 7 * * *"
-  appletuan: "40 7 * * *"
-  ld246: "5 0 * * *"
-  v2ex: "0 8 * * *"
 geekhub:
   cookies:
     _session_id:
@@ -121,23 +117,40 @@ ld246:
     password:
 v2ex:
   cookies:
-    A2:
     PB3_SESSION:
+    A2:
+famijia:
+  headers:
+    token:
+    blackBox:
+    deviceId:
+chinaG:
+  user:
+    username:
+    password:
+cron:
+  geekhub: "0 7 * * *"
+  appletuan: "40 7 * * *"
+  ld246: "5 0 * * *"
+  v2ex: "0 8 * * *"
+  famijia: "10 8 * * *"
+  chinag: "20 8 * * *"
 message:
-  type: bark
+  enabled: true
+  type: "bark"
   bark:
     url:
     key:
   mail:
-    host:
-    protocol:
+    host: "smtp.qq.com"
+    protocol: "smtp"
     port: 465
     username:
     password:
-    from_name:
+    from_name: "auto-sign"
     to:
 ```
 
 ## **注意**
 
-[yaml/v1](github.com/spf13/viper) 在读取配置时大小写不区分 [issues/1014](https://github.com/spf13/viper/issues/1014)
+<del>[yaml/v1](github.com/spf13/viper) 在读取配置时大小写不区分 [issues/1014](https://github.com/spf13/viper/issues/1014) </del>
