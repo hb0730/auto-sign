@@ -19,9 +19,15 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:    "addr",
-				Usage:   "Server listen address",
+				Usage:   "服务监听端口",
 				EnvVars: []string{"SERVER_ADDRESS"},
 				Value:   ":8080",
+			},
+			&cli.StringFlag{
+				Name:    "cron",
+				Usage:   "定时任务表达式",
+				EnvVars: []string{"SERVER_CRON"},
+				Value:   "30 * * * *",
 			},
 		},
 		Authors: []*cli.Author{
@@ -48,7 +54,7 @@ func main() {
 			web.RouterSetup(app)
 			//启动 cron 监听 shutdown指令
 			go func() {
-				err := StartCron()
+				err := StartCron(c.String("cron"))
 				if err != nil {
 					logger.Warn("[main] Cron start error ,Http Server shutdown")
 					if err := app.Shutdown(); err != nil {

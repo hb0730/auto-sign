@@ -30,11 +30,11 @@ type Cron struct {
 }
 
 // StartCron 启动Cron
-func StartCron() error {
+func StartCron(spec string) error {
 	logger.Info("[cron] start ....")
 	c := cron.New()
 	//每30分钟读取配置文件
-	_, err := c.AddFunc("30 * * * *", func() {
+	_, err := c.AddFunc(spec, func() {
 		readCron, e := ReadCron()
 		//如果读取异常，则关闭守护
 		if e != nil {
