@@ -91,7 +91,7 @@ key: 密钥
 # 依赖
 
 * [rod](https://github.com/go-rod/rod) 用于checkin
-* [yaml/v1](github.com/spf13/viper)  用于写yaml
+* [yaml/v1](https://github.com/spf13/viper)  用于写yaml
 * [koanf](https://github.com/knadh/koanf)  用于读取yaml(解决大小写敏感)
 * [cron](https://github.com/robfig/cron) 定时任务
 * [mail](https://github.com/xhit/go-simple-mail) email发送
