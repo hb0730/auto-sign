@@ -19,7 +19,7 @@ func CreateBrowser(headless bool) *rod.Browser {
 }
 
 // ConvertRodCookies 将Cookies转换成rod Cookies
-func ConvertRodCookies(cookies Cookies, domain string) []*proto.NetworkCookie {
+func ConvertRodCookies(cookies map[string]string, domain string) []*proto.NetworkCookie {
 	array := make([]*proto.NetworkCookie, 0)
 	for k, v := range cookies {
 		array = append(array, &proto.NetworkCookie{Name: k, Value: v, Domain: domain})
