@@ -61,7 +61,7 @@ func (f Famijia) doStart() error {
 	if err != nil {
 		return err
 	}
-	var result Result
+	var result FamijiaResult
 	err = json.Unmarshal(bt, &result)
 	if err != nil {
 		return err
@@ -87,7 +87,7 @@ func convertHeader() http.Header {
 	return header
 }
 
-type Result struct {
+type FamijiaResult struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
 }

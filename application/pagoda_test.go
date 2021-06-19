@@ -9,8 +9,8 @@ func TestPagodaWxMini_Start(t *testing.T) {
 		"x-defined-verinfo": "",
 	}
 	pagoda := PagodaWxMini{
-		url:     "",
-		headers: headers,
+		Url:     "",
+		Headers: headers,
 	}
 	_ = pagoda.Start()
 }

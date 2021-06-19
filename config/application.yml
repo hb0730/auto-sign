@@ -21,6 +21,12 @@ chinaG:
   user:
     username:
     password:
+pagodaWxMini:
+  url:
+  headers:
+    userToken:
+    content-type: application/json
+    x-defined-verinfo: miniProgram
 cron:
   geekhub: "0 7 * * *"
   appletuan: "40 7 * * *"
@@ -28,6 +34,7 @@ cron:
   v2ex: "0 8 * * *"
   famijia: "10 8 * * *"
   chinag: "20 8 * * *"
+  pagodaWxMini: "30 8 * * *"
 message:
   enabled: true
   type: "bark"
