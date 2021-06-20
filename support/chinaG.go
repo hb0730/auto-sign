@@ -17,7 +17,7 @@ func init() {
 	g := ChinaG{}
 	g.ISupport = g
 	g.Name = "chinaG"
-	Register("chinag", g)
+	Register("chinaG", g)
 }
 
 func (g ChinaG) DoRun() error {
