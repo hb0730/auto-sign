@@ -21,7 +21,7 @@ var famijiaHeaders = map[string]string{
 	"Accept-Language": "zh-Hans;q=1.0",
 	"User-Agent":      "Fa",
 	"Connection":      "keep-alive",
-	"fmVersion":       "2.3.0",
+	"fmVersion":       "2.4.1",
 }
 
 // Famijia Fa米家签到
@@ -50,9 +50,9 @@ func (f Famijia) doStart() error {
 	if err != nil {
 		return err
 	}
-
-	rq.Header(convertHeader())
-	rq.AddHeaders(f.Headers)
+	header := convertHeader(nil, famijiaHeaders)
+	header = convertHeader(header, f.Headers)
+	rq.Header(header)
 	err = rq.Do()
 	if err != nil {
 		return err
@@ -79,10 +79,13 @@ func (f Famijia) doStart() error {
 	return nil
 }
 
-func convertHeader() http.Header {
-	var header = http.Header{}
-	for k, v := range famijiaHeaders {
-		header.Set(k, v)
+// 避免大小写
+func convertHeader(header http.Header, headers map[string]string) http.Header {
+	if header == nil {
+		header = http.Header{}
+	}
+	for k, v := range headers {
+		header[k] = []string{v}
 	}
 	return header
 }
