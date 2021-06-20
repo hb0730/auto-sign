@@ -50,7 +50,7 @@ func (p *PagodaWxMini) sign() error {
 	}
 	var result PagodaResult
 	_ = json.Unmarshal(bt, &result)
-	if result.ErrorCode == "0" || result.ErrorCode == "35702" {
+	if result.ErrorCode == 0 || result.ErrorCode == 35702 {
 		logger.Infof("[pagoda-wx-mini] sign success: [%s]", result.MessageInfo)
 	} else {
 		logger.Warnf("[pagoda-wx-mini] sign failed: [%s]", result.ErrorMsg)
@@ -64,7 +64,7 @@ func (p *PagodaWxMini) sign() error {
 }
 
 type PagodaResult struct {
-	ErrorCode   string `json:"errorCode"`
+	ErrorCode   int    `json:"errorCode"`
 	ErrorMsg    string `json:"errorMsg"`
 	MessageInfo string `yaml:"messageInfo"`
 }
