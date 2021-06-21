@@ -13,8 +13,8 @@ import (
 
 //https://ld246.com
 
-//headers 设置请求头，防止限流拦截
-var headers = map[string]string{
+//ldHeaders 设置请求头，防止限流拦截
+var ldHeaders = map[string]string{
 	"User-Agent": "auto-sign/1.0.4",
 	"Accept":     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
 }
@@ -150,7 +150,7 @@ type LoginResult struct {
 
 func rodHeader() []string {
 	header := make([]string, 0)
-	for k, v := range headers {
+	for k, v := range ldHeaders {
 		header = append(append(header, k), v)
 	}
 	return header
@@ -158,7 +158,7 @@ func rodHeader() []string {
 
 func setHeader() http.Header {
 	header := http.Header{}
-	for k, v := range headers {
+	for k, v := range ldHeaders {
 		header.Set(k, v)
 	}
 	return header

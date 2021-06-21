@@ -31,7 +31,7 @@ type Famijia struct {
 
 func (f Famijia) Start() error {
 	logger.Info("[Famijia] sign start ...")
-	if len(headers) == 0 {
+	if len(f.Headers) == 0 {
 		logger.Warn("[Famijia] params is null")
 		return utils.AutoSignError{
 			Module:  "Famijia",
