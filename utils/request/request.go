@@ -120,3 +120,15 @@ func (r *Request) GetBody() ([]byte, error) {
 	}
 	return ioutil.ReadAll(reader)
 }
+
+// ConvertHeader 将 map[string]string 转成 http.header
+//   headers 可以为空
+func ConvertHeader(header http.Header, headers map[string]string) http.Header {
+	if header == nil {
+		header = http.Header{}
+	}
+	for k, v := range headers {
+		header[k] = []string{v}
+	}
+	return header
+}

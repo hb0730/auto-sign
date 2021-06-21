@@ -6,7 +6,6 @@ import (
 	"github.com/hb0730/auto-sign/utils"
 	"github.com/hb0730/auto-sign/utils/request"
 	"github.com/mritd/logger"
-	"net/http"
 )
 
 //来自https://github.com/blackmatrix7/ios_rule_script
@@ -50,8 +49,8 @@ func (f Famijia) doStart() error {
 	if err != nil {
 		return err
 	}
-	header := convertHeader(nil, famijiaHeaders)
-	header = convertHeader(header, f.Headers)
+	header := request.ConvertHeader(nil, famijiaHeaders)
+	header = request.ConvertHeader(header, f.Headers)
 	rq.Header(header)
 	err = rq.Do()
 	if err != nil {
@@ -77,17 +76,6 @@ func (f Famijia) doStart() error {
 		}
 	}
 	return nil
-}
-
-// 避免大小写
-func convertHeader(header http.Header, headers map[string]string) http.Header {
-	if header == nil {
-		header = http.Header{}
-	}
-	for k, v := range headers {
-		header[k] = []string{v}
-	}
-	return header
 }
 
 type FamijiaResult struct {
