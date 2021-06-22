@@ -14,6 +14,11 @@ type PagodaWxMini struct {
 	Headers map[string]string
 }
 
+var pagodaWxMiniHeaders = map[string]string{
+	"content-type":      "application/json",
+	"x-defined-verinfo": "miniProgram",
+}
+
 func (p *PagodaWxMini) Start() error {
 	if p.Url == "" {
 		return utils.AutoSignError{
@@ -39,7 +44,9 @@ func (p *PagodaWxMini) sign() error {
 	if err != nil {
 		return err
 	}
-	rq.AddHeaders(p.Headers)
+	header := request.ConvertHeader(nil, pagodaWxMiniHeaders)
+	header = request.ConvertHeader(header, p.Headers)
+	rq.Header(header)
 	err = rq.Do()
 	if err != nil {
 		return err
@@ -49,8 +56,11 @@ func (p *PagodaWxMini) sign() error {
 		return err
 	}
 	var result PagodaResult
-	_ = json.Unmarshal(bt, &result)
-	if result.ErrorCode == 0 || result.ErrorCode == 35702 {
+	err = json.Unmarshal(bt, &result)
+	if err != nil {
+		return err
+	}
+	if result.ErrorCode == "0" || result.ErrorCode == "35702" {
 		logger.Infof("[pagoda-wx-mini] sign success: [%s]", result.MessageInfo)
 	} else {
 		logger.Warnf("[pagoda-wx-mini] sign failed: [%s]", result.ErrorMsg)
@@ -64,7 +74,7 @@ func (p *PagodaWxMini) sign() error {
 }
 
 type PagodaResult struct {
-	ErrorCode   int    `json:"errorCode"`
-	ErrorMsg    string `json:"errorMsg"`
-	MessageInfo string `yaml:"messageInfo"`
+	ErrorCode   json.Number `json:"errorCode"`
+	ErrorMsg    string      `json:"errorMsg"`
+	MessageInfo string      `yaml:"messageInfo"`
 }

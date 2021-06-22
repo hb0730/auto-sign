@@ -79,6 +79,6 @@ func (f Famijia) doStart() error {
 }
 
 type FamijiaResult struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Code    json.Number `json:"code"`
+	Message string      `json:"message"`
 }

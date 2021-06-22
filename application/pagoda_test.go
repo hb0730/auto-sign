@@ -4,9 +4,7 @@ import "testing"
 
 func TestPagodaWxMini_Start(t *testing.T) {
 	h := map[string]string{
-		"userToken":         "",
-		"content-type":      "",
-		"x-defined-verinfo": "",
+		"userToken": "",
 	}
 	pagoda := PagodaWxMini{
 		Url:     "",

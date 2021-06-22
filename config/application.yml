@@ -15,8 +15,8 @@ v2ex:
 famijia:
   headers:
     token:
-    blackBox:
     deviceId:
+    blackBox:
 chinaG:
   user:
     username:
@@ -25,12 +25,10 @@ pagodaWxMini:
   url:
   headers:
     userToken:
-    content-type: application/json
-    x-defined-verinfo: miniProgram
 cron:
-  geekhub: "0 7 * * *"
-  appletuan: "40 7 * * *"
-  ld246: "5 0 * * *"
+  ld246: "0 7 * * *"
+  geekhub: "10 7 * * *"
+  appletuan: "20 7 * * *"
   v2ex: "0 8 * * *"
   famijia: "10 8 * * *"
   chinaG: "20 8 * * *"
@@ -42,10 +40,10 @@ message:
     url:
     key:
   mail:
-    host: "smtp.qq.com"
-    protocol: "smtp"
+    host:
+    protocol:
     port: 465
     username:
     password:
-    from_name: "auto-sign"
+    from_name:
     to:
