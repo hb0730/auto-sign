@@ -2,7 +2,7 @@ version: '3.1'
 services:
   auto-sign:
     restart: always
-    image: auto-sign:latest
+    image: hb0730/auto-sign:latest
     environment:
       - TZ=Asia/Shanghai
     container_name: auto-sign

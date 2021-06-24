@@ -151,6 +151,29 @@ message:
     to:
 ```
 
+## Docker 
+```yaml
+version: '3.1'
+services:
+  auto-sign:
+    restart: always
+    image: hb0730/auto-sign:latest
+    environment:
+      - TZ=Asia/Shanghai
+    container_name: auto-sign
+    volumes:
+      - ./config:/app/config/
+```
+
+```tree
+.
+├── config
+│   └── application.yml
+├── docker-compose.yml
+
+```
+
+
 ## **注意**
 
 <del>[yaml/v1](github.com/spf13/viper) 在读取配置时大小写不区分 [issues/1014](https://github.com/spf13/viper/issues/1014) </del>
