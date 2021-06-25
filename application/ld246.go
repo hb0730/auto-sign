@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/go-rod/rod"
 	"github.com/hb0730/auto-sign/utils"
-	"github.com/hb0730/auto-sign/utils/request"
+	"github.com/hb0730/go-request"
 	"github.com/mritd/logger"
 	"net/http"
 	"time"

@@ -3,7 +3,7 @@ package message
 import (
 	"encoding/json"
 	"github.com/hb0730/auto-sign/config"
-	"github.com/hb0730/auto-sign/utils/request"
+	"github.com/hb0730/go-request"
 	"github.com/mritd/logger"
 )
 

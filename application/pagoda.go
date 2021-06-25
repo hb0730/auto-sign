@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hb0730/auto-sign/utils"
-	"github.com/hb0730/auto-sign/utils/request"
+	"github.com/hb0730/go-request"
 	"github.com/mritd/logger"
 )
 
