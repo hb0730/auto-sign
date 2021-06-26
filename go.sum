@@ -117,8 +117,8 @@ github.com/hashicorp/vault/api v1.0.4/go.mod h1:gDcqh3WGcR1cpF5AJz/B1UFheUEneMoI
 github.com/hashicorp/vault/sdk v0.1.13/go.mod h1:B+hVj7TpuQY1Y/GPbCpffmgd+tSEwvhkWnjtSYCaS2M=
 github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=
 github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=
-github.com/hb0730/go-request v0.0.0-20210625034535-3f53a6f8fd52 h1:DsjTJU+ryz9Rwpdbu2cqf0pdhsDG/XVof06DT3RWOhw=
-github.com/hb0730/go-request v0.0.0-20210625034535-3f53a6f8fd52/go.mod h1:9qQP+TNx3hEUjNSsw5eyZhVV4UvjFgyLDE+ZqE848Es=
+github.com/hb0730/go-request v1.0.0 h1:t/P1/uOzOiHikp1fJ6Ht2qLXbemA+e/Ky/q6NFSkQhU=
+github.com/hb0730/go-request v1.0.0/go.mod h1:9qQP+TNx3hEUjNSsw5eyZhVV4UvjFgyLDE+ZqE848Es=
 github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
 github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=

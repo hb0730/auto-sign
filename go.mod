@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/go-rod/rod v0.99.0
 	github.com/gofiber/fiber/v2 v2.10.0
-	github.com/hb0730/go-request v0.0.0-20210625034535-3f53a6f8fd52 // indirect
+	github.com/hb0730/go-request v1.0.0
 	github.com/knadh/koanf v1.1.0
 	github.com/mritd/logger v0.0.5
 	github.com/robfig/cron/v3 v3.0.0
