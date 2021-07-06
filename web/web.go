@@ -6,8 +6,8 @@ import (
 )
 
 func Run(auto support.AutoRun) {
-	config.LoadViper()
-	config.LoadKoanf()
+	config.LoadViper(config.ConfigPath)
+	config.LoadKoanf(config.ConfigPath)
 	go func() {
 		auto.Run()
 	}()

@@ -2,6 +2,10 @@
 
 go 实现签到
 
+## command
+
+`./auto-sign -SERVER_ADDRESS="" -SERVER_CRON="" -SERVER_CONFIG=“”`
+
 ## geekhub
 
 代码实现 [geekhub](https://geekhub.com) 的签到 首先需要一个原始的`_session_id`
@@ -151,7 +155,8 @@ message:
     to:
 ```
 
-## Docker 
+## Docker
+
 ```yaml
 version: '3.1'
 services:
@@ -172,7 +177,6 @@ services:
 ├── docker-compose.yml
 
 ```
-
 
 ## **注意**
 

@@ -19,7 +19,7 @@ var jobs = make(map[string]Jobs)
 //ReadCron 读取cron表达式
 func ReadCron() (Cron, error) {
 	logger.Info("[cron]  read load yaml")
-	v := config.LoadKoanf()
+	v := config.LoadKoanf(config.ConfigPath)
 	r := v.StringMap("cron")
 	return Cron{Cron: r}, nil
 }
@@ -30,8 +30,9 @@ type Cron struct {
 }
 
 // StartCron 启动Cron
-func StartCron(spec string) error {
+func StartCron(spec, configPath string) error {
 	logger.Info("[cron] start ....")
+	config.SetConfigPath(configPath)
 	c := cron.New()
 	//每30分钟读取配置文件
 	_, err := c.AddFunc(spec, func() {

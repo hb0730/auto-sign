@@ -13,51 +13,60 @@ import (
 )
 
 var k *koanf.Koanf
+var ConfigPath string
+
+func SetConfigPath(configPath string) {
+	ConfigPath = configPath
+}
 
 func ReadYaml() *koanf.Koanf {
 	if k == nil {
-		return LoadKoanf()
+		return LoadKoanf("")
 	}
 	return k
 }
-func LoadKoanf() *koanf.Koanf {
-	load()
+func LoadKoanf(config string) *koanf.Koanf {
+	load(config)
 	return k
 }
-func load() {
+func load(config string) {
 	k = koanf.New(".")
-	_ = k.Load(file.Provider("./config/application.yml"), yaml.Parser())
-	_ = k.Load(file.Provider("../config/application.yml"), yaml.Parser())
-	workPath, _ := os.Executable()
-	filePath := path.Dir(workPath)
-	filePath = filepath.Join(filePath, "/config/application.yml")
-	_ = k.Load(file.Provider(filePath), yaml.Parser())
+	if config == "" {
+		defaultConfig()
+	} else {
+		err := k.Load(file.Provider(config), yaml.Parser())
+		if err != nil {
+			panic(&utils.AutoSignError{
+				Module: "yaml",
+				Method: "read yaml",
+				E:      err,
+			})
+		}
+
+	}
 }
 
 var v *viper.Viper
 
 func GetViper() *viper.Viper {
 	if v == nil {
-		return LoadViper()
+		return LoadViper("")
 	}
 	return v
 }
 
-func LoadViper() *viper.Viper {
-	initViper()
+func LoadViper(config string) *viper.Viper {
+	initViper(config)
 	return v
 }
 
-func initViper() {
+func initViper(config string) {
 	logger.Info("[config] read yaml file init ...")
-	workPath, _ := os.Executable()
-	filePath := path.Dir(workPath)
-	filePath = filepath.Join(filePath, "/config/application.yml")
-	viper.SetConfigName("application")
-	viper.SetConfigType("yml")
-	viper.AddConfigPath("./config")
-	viper.AddConfigPath("../config")
-	viper.AddConfigPath(filePath)
+	if config == "" {
+		defaultConfig()
+	} else {
+		viper.SetConfigFile(config)
+	}
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(&utils.AutoSignError{
@@ -66,6 +75,23 @@ func initViper() {
 			E:      err,
 		})
 	}
-
 	v = viper.GetViper()
+}
+
+func defaultConfig() {
+	workPath, _ := os.Executable()
+	filePath := path.Dir(workPath)
+	filePath = filepath.Join(filePath, "/config/application.yml")
+	viper.SetConfigName("application")
+	viper.SetConfigType("yml")
+	viper.AddConfigPath("./config")
+	viper.AddConfigPath("../config")
+	viper.AddConfigPath(filePath)
+
+	_ = k.Load(file.Provider("./config/application.yml"), yaml.Parser())
+	_ = k.Load(file.Provider("../config/application.yml"), yaml.Parser())
+	workPath, _ = os.Executable()
+	filePath = path.Dir(workPath)
+	filePath = filepath.Join(filePath, "/config/application.yml")
+	_ = k.Load(file.Provider(filePath), yaml.Parser())
 }

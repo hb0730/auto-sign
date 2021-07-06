@@ -29,6 +29,12 @@ func main() {
 				EnvVars: []string{"SERVER_CRON"},
 				Value:   "30 * * * *",
 			},
+			&cli.StringFlag{
+				Name:    "config",
+				Usage:   "服务配置项",
+				EnvVars: []string{"SERVER_CONFIG"},
+				Value:   "",
+			},
 		},
 		Authors: []*cli.Author{
 			{
@@ -54,7 +60,7 @@ func main() {
 			web.RouterSetup(app)
 			//启动 cron 监听 shutdown指令
 			go func() {
-				err := StartCron(c.String("cron"))
+				err := StartCron(c.String("cron"), c.String("config"))
 				if err != nil {
 					logger.Warn("[main] Cron start error ,Http Server shutdown")
 					if err := app.Shutdown(); err != nil {
