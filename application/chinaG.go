@@ -1,6 +1,7 @@
 package application
 
 import (
+	"fmt"
 	"github.com/go-rod/rod"
 	"github.com/hb0730/auto-sign/utils"
 	"github.com/mritd/logger"
@@ -9,17 +10,18 @@ import (
 //几鸡 https://cc.ax/
 
 type ChinaG struct {
+	URL      string
 	Username string
 	Password string
 }
 
 func (g ChinaG) Start() error {
-	if g.Username == "" || g.Password == "" {
-		logger.Warn("[ChinaG] username/password is null")
+	if g.Username == "" || g.Password == "" || g.URL == "" {
+		logger.Warn("[ChinaG] url/username/password is null")
 		return utils.AutoSignError{
 			Module:  "ChinaG",
 			Method:  "DoRun",
-			Message: "username/password is null",
+			Message: "url/username/password is null",
 		}
 	}
 	return g.doStart()
@@ -29,7 +31,7 @@ func (g ChinaG) doStart() error {
 	b := utils.CreateBrowser(true)
 	defer b.MustClose()
 	//login
-	page := b.MustPage("https://cc.ax/signin").MustWaitLoad()
+	page := b.MustPage(fmt.Sprintf("%ssignin", g.URL)).MustWaitLoad()
 	defer page.MustClose()
 
 	page.

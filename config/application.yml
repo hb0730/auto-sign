@@ -19,6 +19,7 @@ famijia:
     blackBox:
 chinaG:
   user:
+    url:
     username:
     password:
 pagodaWxMini:

@@ -28,6 +28,7 @@ func (g ChinaG) DoRun() error {
 	var password = u["password"]
 	gg.Username = username
 	gg.Password = password
+	gg.URL = u["url"]
 	return gg.Start()
 }
 
