@@ -72,6 +72,12 @@ func (p *PagodaWxMini) sign() error {
 	}
 	return nil
 }
+func (p PagodaWxMini) otherHeader() map[string]string {
+	return map[string]string{
+		"content-type":      "application/json",
+		"x-defined-verinfo": "miniProgram",
+	}
+}
 
 type PagodaResult struct {
 	ErrorCode   json.Number `json:"errorCode"`

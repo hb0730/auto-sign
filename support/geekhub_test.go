@@ -5,18 +5,18 @@ import (
 	"testing"
 )
 
-func TestFamijia_DoRun(t *testing.T) {
+func TestGeekhub_DoRun(t *testing.T) {
 	config.LoadKoanf("")
-	f := Famijia{}
-	f.Name = "famijia"
-	f.ISupport = f
+	g := Geekhub{}
+	g.Name = "geekhub"
+	g.ISupport = g
 	tests := []struct {
 		name    string
-		fields  Famijia
+		fields  Geekhub
 		wantErr bool
 	}{
 		// TODO: Add test cases.
-		{"test", f, false},
+		{"test", g, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -8,21 +8,6 @@ import (
 	"github.com/mritd/logger"
 )
 
-//来自https://github.com/blackmatrix7/ios_rule_script
-
-var famijiaHeaders = map[string]string{
-	"Host":            "fmapp.chinafamilymart.com.cn",
-	"Content-Type":    "application/json",
-	"Accept":          "*/*",
-	"loginChannel":    "app",
-	"os":              "ios",
-	"Accept-Encoding": "br;q=1.0, gzip;q=0.9, deflate;q=0.8",
-	"Accept-Language": "zh-Hans;q=1.0",
-	"User-Agent":      "Fa",
-	"Connection":      "keep-alive",
-	"fmVersion":       "2.4.1",
-}
-
 // Famijia Fa米家签到
 type Famijia struct {
 	Headers map[string]string
@@ -49,7 +34,7 @@ func (f Famijia) doStart() error {
 	if err != nil {
 		return err
 	}
-	header := request.ConvertHeader(nil, famijiaHeaders)
+	header := request.ConvertHeader(nil, f.otherHeaders())
 	header = request.ConvertHeader(header, f.Headers)
 	rq.Header(header)
 	err = rq.Do()
@@ -76,6 +61,21 @@ func (f Famijia) doStart() error {
 		}
 	}
 	return nil
+}
+
+func (f Famijia) otherHeaders() map[string]string {
+	return map[string]string{
+		"Host":            "fmapp.chinafamilymart.com.cn",
+		"Content-Type":    "application/json",
+		"Accept":          "*/*",
+		"loginChannel":    "app",
+		"os":              "ios",
+		"Accept-Language": "zh-Hans;q=1.0",
+		"Accept-Encoding": "br;q=1.0, gzip;q=0.9, deflate;q=0.8",
+		"User-Agent":      "Fa",
+		"Connection":      "keep-alive",
+		"fmVersion":       "2.4.1",
+	}
 }
 
 type FamijiaResult struct {

@@ -8,3 +8,8 @@ func TestChinaG_Run(t *testing.T) {
 	g.ISupport = g
 	g.Run()
 }
+
+func TestChinaG_DoRun(t *testing.T) {
+	g := ChinaG{}
+	g.DoRun()
+}
