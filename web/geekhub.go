@@ -14,6 +14,9 @@ func init() {
 		c.Group("/geekhub").
 			Post("/cookie", func(c *fiber.Ctx) error {
 				return getGeekhubCookies(c)
+			}).
+			Get("/start", func(c *fiber.Ctx) error {
+				return GeekhubStart(c)
 			})
 	})
 }
@@ -32,4 +35,8 @@ func getGeekhubCookies(c *fiber.Ctx) error {
 	go Run(hub)
 
 	return c.Status(200).JSON(success())
+}
+
+func GeekhubStart(c *fiber.Ctx) error {
+	return hub.DoRun()
 }
