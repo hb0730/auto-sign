@@ -3,7 +3,7 @@ module github.com/hb0730/auto-sign
 go 1.16
 
 require (
-	github.com/go-rod/rod v0.99.0
+	github.com/go-rod/rod v0.101.8
 	github.com/gofiber/fiber/v2 v2.10.0
 	github.com/hb0730/go-request v1.0.0
 	github.com/knadh/koanf v1.1.0
@@ -12,5 +12,7 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/xhit/go-simple-mail/v2 v2.9.1
+	github.com/ysmood/goob v0.3.1 // indirect
+	github.com/ysmood/gson v0.7.0 // indirect
 	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect
 )
