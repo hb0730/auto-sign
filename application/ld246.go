@@ -91,7 +91,7 @@ func (ld Ld246) Login() (LoginResult, error) {
 
 // Sign 签到
 func (ld Ld246) Sign(cookies map[string]string) {
-	b := utils.CreateBrowser(true)
+	b := utils.CreateBrowser(false)
 	defer b.MustClose()
 	page := b.MustSetCookies(utils.ConvertRodCookies(cookies, ".ld246.com")...).
 		MustPage("")
@@ -99,8 +99,9 @@ func (ld Ld246) Sign(cookies map[string]string) {
 	//设置header
 	page.MustSetExtraHeaders(rodHeader()...)
 
-	page = page.MustNavigate("https://ld246.com/activity/checkin").MustWaitLoad()
-
+	page = page.MustNavigate("https://ld246.com/activity/checkin")
+	time.Sleep(10 * time.Second)
+	page.MustWaitLoad()
 	page.Timeout(30*time.Second).
 		Race().
 		ElementR(`div.module__body > a.btn`, `领取今日签到奖励`).
@@ -137,7 +138,7 @@ func (ld Ld246) Logout(cookies map[string]string) error {
 		return err
 	}
 	by, err := rq.GetBody()
-	logger.Infof("[ld246] logout success %v\n", string(by))
+	logger.Infof("[ld246] logout success %v \n", string(by))
 	return nil
 }
 

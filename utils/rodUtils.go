@@ -15,7 +15,7 @@ func CreateBrowser(headless bool) *rod.Browser {
 		New().
 		Headless(headless).
 		MustLaunch()
-	return rod.New().ControlURL(url).MustConnect()
+	return rod.New().ControlURL(url).MustConnect().NoDefaultDevice()
 }
 
 // ConvertRodCookies 将Cookies转换成rod Cookies
